@@ -8,7 +8,7 @@ public class Hash<E> {
     }
 
     public HashObj[] add(HashObj element) {
-	int index = element.key() % table.length;
+	int index = element.key() % this.table.length;
 	if(table[index] == null) table[index] = element;
 	else {
 	    int originalIndex = index;
@@ -26,7 +26,9 @@ public class Hash<E> {
 
     public boolean mem(HashObj element) {
 	for(int i = 0; i < table.length; i++) {
-	    if(table[i].eq(element)) return true;
+	    if(table[i] != null) {
+		if(table[i].eq(element)) return true;
+	    }
 	}
 	return false;
     }
@@ -39,14 +41,33 @@ public class Hash<E> {
     }
 
     public static void main(String[] args) {
-	Hash t = new Hash();
+	// Example 1 of A
+	Hash stringTable = new Hash();
 	HashObj o1 = new HashObj(763, "beans");
 	HashObj o2 = new HashObj(12938, "hello");
-	HashObj o3 = new HashObj(28, "goodbye");
-	t.create(5);
-	t.add(o1);
-	t.add(o2);
-	t.add(o3);
-	t.printHash();
+	HashObj o3 = new HashObj(28, "goodbye"); // collision
+	HashObj o4 = new HashObj(123, "yoyo");
+	stringTable.create(5);
+	stringTable.add(o1);
+	stringTable.add(o2);
+	stringTable.add(o3);
+        System.out.println(stringTable.mem(o4));
+	System.out.println(stringTable.mem(o3));
+	stringTable.printHash();
+	System.out.println();
+
+	// Example 2 of A
+	Hash intTable = new Hash();
+	HashObj i1 = new HashObj(3,3);
+	HashObj i2 = new HashObj(21,21);
+	HashObj i3 = new HashObj(156,156);
+	HashObj i4 = new HashObj(13,13); // collision
+	intTable.create(5);
+	intTable.add(i1);
+	intTable.add(i2);
+	intTable.add(i4);
+	System.out.println(intTable.mem(i3));
+	System.out.println(intTable.mem(i2));
+	intTable.printHash();
     }
 }
