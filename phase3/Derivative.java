@@ -22,16 +22,58 @@ public class Derivative {
         // Not leaf -> Contains an operation
         else {
             Operation o = tree.op;
+            // UNION
             if (o == Operation.UNION) {
                ExpTree newTree = new ExpTree(Operation.UNION);
                newTree.left = getDerivative(c, tree.left);
                newTree.right = getDerivative(c, tree.right);
-               if (newTree.left.value == "@") return new ExpTree(newTree.right.value);
-               else if (newTree.right.value == "@") return new ExpTree(newTree.left.value);
+               if (newTree.left.value.equals("@")) return new ExpTree(newTree.right.value);
+               else if (newTree.right.value.equals("@")) return new ExpTree(newTree.left.value);
                return newTree;
+            }
+            // CONCAT
+            else if (o == Operation.CONCAT) {
+                ExpTree newLeft = new ExpTree(Operation.CONCAT);
+                newLeft.left = getDerivative(c, tree.left);
+                newLeft.right = tree.right;
+                ExpTree newRight = new ExpTree(Operation.CONCAT);
+                newRight.left = new ExpTree(v2(tree.left));
+                newRight.right = getDerivative(c, tree.right);
+                ExpTree newTree = new ExpTree(Operation.UNION);
+                newTree.left = newLeft;
+                newTree.right = newRight;
+                return newTree;
+            }
+            // STAR (value always on the right)
+            else if (o == Operation.STAR) {
+                ExpTree newRight = new ExpTree(Operation.STAR);
+                newRight.right = tree.right;
+                ExpTree newTree = new ExpTree(Operation.CONCAT);
+                newTree.left = getDerivative(c, tree.right);
+                newTree.right = newRight;
+                return newTree;
             }
         }
         return null;
+    }
+    
+    
+    
+    public String v2(ExpTree t) {
+        if (v(t)) return "&";
+        else return "@";
+    }
+    
+    public boolean v(ExpTree t) {
+        String val = t.value;
+        Operation op = t.op;
+        if (val.equals("&")) return true;
+        else if (val.equals("@")) return false;
+        else if (val != null) return false;
+        else if (op == Operation.CONCAT || op == Operation.INTERSECT) return v(t.left) && v(t.right);
+        else if (op == Operation.UNION) return v(t.left) || v(t.right);
+        else if (op == Operation.STAR) return true;
+        else return false;
     }
     
     public static void main(String[] args) {
@@ -44,10 +86,14 @@ public class Derivative {
 //        ExpTree concat = new ExpTree(Operation.CONCAT);
         ExpTree a = new ExpTree("mello");
         ExpTree b = new ExpTree("happy");
-        ExpTree c = new ExpTree(Operation.UNION);
-        c.left = a;
+        ExpTree c = new ExpTree(Operation.STAR);
+//        c.left = a;
         c.right = b;
         Derivative d = new Derivative('h', c);
-        System.out.println(d.t.value);
+        System.out.println(d.t.op);
+        System.out.println(d.t.left.value);
+        System.out.println(d.t.right.op);
+        System.out.println(d.t.right.right.value);
+
     }
 }
