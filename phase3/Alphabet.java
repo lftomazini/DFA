@@ -1,10 +1,12 @@
+package phase3;
+
 public class Alphabet {
 
     private int numDigits;
     private int numLowerCase;
     private int numUpperCase;
     private char[] values;
-    private int size;
+    public int size;
     private int curIndex;
 
     // Constructor to produce Alphabet object containing 0-9, a-z, A-Z
