@@ -1,0 +1,6 @@
+phase1:
+good implementation of generic hashtable in java
+5/5
+
+phase2:
+see scan of my comments in phase2 folder.
