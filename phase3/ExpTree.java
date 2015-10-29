@@ -20,6 +20,13 @@ public class ExpTree {
         this.right = null;
     }
     
+    public boolean isEqual( ExpTree otherTree ) {
+        if (this.op==otherTree.op && this.value==otherTree.value && 
+                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {
+            return true;
+        } else return false;
+    }
+    
     public enum Operation {
         CONCAT, STAR, UNION, INTERSECT, NOT
     }
