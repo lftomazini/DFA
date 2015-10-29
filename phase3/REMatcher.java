@@ -1,6 +1,6 @@
 package phase3;
 
-public class REMatching {
+public class REMatcher {
     
     // "When RE matches a string, we compute a derivative for each of the characters in the string"
     
