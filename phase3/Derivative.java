@@ -31,6 +31,17 @@ public class Derivative {
                else if (newTree.right.value.equals("@")) return new ExpTree(newTree.left.value);
                return newTree;
             }
+            //INTERSECT
+            if (o == Operation.INTERSECT) {
+                ExpTree newTree = new ExpTree(Operation.UNION);
+                newTree.left = getDerivative(c, tree.left);
+                newTree.right = getDerivative(c, tree.right);
+                if ("@".equals(newTree.left.value) || "@".equals(
+                        newTree.right.value)) {
+                    return new ExpTree("@");
+                }
+                return newTree;
+            }
             // CONCAT
             else if (o == Operation.CONCAT) {
                 ExpTree newLeft = new ExpTree(Operation.CONCAT);
