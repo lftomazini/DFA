@@ -114,19 +114,19 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree ab = new ExpTree("ab");
-        ExpTree ac = new ExpTree("ac");
+        ExpTree ab = new ExpTree("a");
+        ExpTree ac = new ExpTree("b");
         ExpTree or = new ExpTree(Operation.UNION);
-        ExpTree ba = new ExpTree("ab");
-        ExpTree ca = new ExpTree("ca");
+        ExpTree ba = new ExpTree("a");
+        ExpTree ca = new ExpTree("c");
         ExpTree or2 = new ExpTree(Operation.UNION);
         ExpTree plus = new ExpTree(Operation.CONCAT);
         or.left = ab;
         or.right = ac;
         or2.left = ba;
         or2.right = ca;
-        plus.left = or;
-        plus.right = or2;
+        plus.left = or2;
+        plus.right = or;
 
         dfa.createDFA(plus);
         System.out.println("done");
