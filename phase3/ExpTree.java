@@ -21,10 +21,39 @@ public class ExpTree {
     }
     
     public boolean isEqual( ExpTree otherTree ) {
-        if (this.op==otherTree.op && this.value==otherTree.value && 
-                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {
-            return true;
-        } else return false;
+//        if(this.right == null && otherTree.right != null) return false;
+//        if(this.left == null && otherTree.left != null) return false;
+//        if(this.right != null && otherTree.right == null) return false;
+//        if(this.left != null && otherTree.right == null) return false;
+//        if(this.left == null && otherTree.left == null && this.right == null && otherTree.right == null && this.value == otherTree.value);
+//        System.out.println(this.op + this.value + otherTree.op + otherTree.value);
+        if (this.op == otherTree.op && this.value==otherTree.value) {
+            if(this.left != null && otherTree.left != null && this.right != null && otherTree.right != null) {
+                return this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right);
+            }
+            else {
+                boolean left;
+                boolean right;
+                if(this.left == null || otherTree.left == null) {
+                    left = this.left == otherTree.left;
+                }
+                else {
+                    left = this.left.isEqual(otherTree.left);
+                }
+                if(this.right == null || otherTree.right == null) {
+                    right = this.right == otherTree.right;
+                }
+                else {
+                    right = this.right.isEqual(otherTree.right);
+                }
+                return left && right;
+            }
+        }
+        return false;
+//        if (this.op==otherTree.op && this.value==otherTree.value && 
+//                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {
+//            return true;
+//        } else return false;
     }
     
     public enum Operation {
@@ -45,6 +74,8 @@ public class ExpTree {
         star1.right = a;
         concat.left = star1;
         concat.right = star2;
+        
+        System.out.println(b.isEqual(a));
         
     }
     
