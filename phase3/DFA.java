@@ -1,11 +1,12 @@
 package phase3;
 import phase3.ExpTree.Operation;
+// javac phase3/DFA.java phase3/ExpTree.java phase3/Alphabet.java
 
 class Delta {
     public int current;
     public char letter;
     public int next;
-    
+
     public Delta(int c, char l, int n) {
         this.current = c;
         this.letter = l;
@@ -16,12 +17,12 @@ class Delta {
 class Trans {
     public Delta[] trans;
     public int size;
-    
+
     public Trans() {
         this.trans = new Delta[10];
         this.size = 0;
     }
-    
+
     public void add(Delta item) {
         if (this.size == this.trans.length) {
             Delta[] temp = new Delta[this.trans.length * 2];
@@ -38,12 +39,12 @@ class Trans {
 class States {
     public ExpTree[] states;
     public int size;
-    
+
     public States() {
         this.states = new ExpTree[10];
         this.size = 0;
     }
-    
+
     public void add(ExpTree item) {
         if (this.size == this.states.length) {
             ExpTree[] temp = new ExpTree[this.states.length * 2];
@@ -63,7 +64,7 @@ public class DFA {
     public Trans transitions;
     public int[] finalStates;
     public Derivative dObj;
-    
+
     public DFA() {
         this.states = new States();
         Alphabet abc = new Alphabet();
@@ -76,7 +77,7 @@ public class DFA {
         this.finalStates = new int[100];
         this.dObj = new Derivative();
     }
-    
+
     public void createDFA(ExpTree regExp) {
         this.states.add(regExp);
         // go through alphabet creating transitions adding new states when necessary
@@ -87,20 +88,20 @@ public class DFA {
             boolean noNew = true;
             for(int i = 0; i < this.alphabet.length; i++) {
                 ExpTree derivative = this.dObj.getDerivative(this.alphabet[i], this.states.states[index]);
-                System.out.println(derivative.value);
+                // System.out.println(derivative.value);
                 // for each state in Q
                 boolean found = false;
                 for(int j = 0; j < this.states.size; j++) {
                     if(derivative.isEqual(states.states[j])) {
                         transitions.add(new Delta(index, this.alphabet[i], j));
-                        System.out.println(index + " " + this.alphabet[i] + " " + j);
+                        // System.out.println(index + " " + this.alphabet[i] + " " + j);
                         found = true;
                         break;
                     }
                 }
                 if(!found) {
                     transitions.add(new Delta(index, this.alphabet[i], this.states.size));
-                    System.out.println(index + " " +  this.alphabet[i] + " " + this.states.size);
+                    // System.out.println(index + " " +  this.alphabet[i] + " " + this.states.size);
                     states.add(derivative);
                     noNew = false;
                 }
@@ -109,16 +110,16 @@ public class DFA {
             index++;
         }
     }
-    
+
     public static void main(String[] args) {
         DFA dfa = new DFA();
-        
+
         ExpTree ab = new ExpTree("ab");
         ExpTree ac = new ExpTree("ac");
-        ExpTree or = new ExpTree(Operation.STAR);
-//        or.left = ab;
+        ExpTree or = new ExpTree(Operation.UNION);
+        or.left = ab;
         or.right = ac;
-        
+
         dfa.createDFA(or);
         System.out.println("done");
         for(int i = 0; i < dfa.transitions.size; i++) {
@@ -126,11 +127,11 @@ public class DFA {
         }
 //        System.out.println(dfa.states.states[2].right);
 //        System.out.println(dfa.states.states[3].left);
-        
+
 //        System.out.println("new DFA");
-        
+
 //        DFA dfa2 = new DFA();
-//        
+//
 //        ExpTree a = new ExpTree("a");
 //        ExpTree b = new ExpTree("b");
 //        ExpTree c = new ExpTree("c");
@@ -144,8 +145,8 @@ public class DFA {
 //        star1.right = a;
 //        concat.left = star1;
 //        concat.right = star2;
-//        
+//
 //        dfa2.createDFA(concat);
     }
-    
+
 }
