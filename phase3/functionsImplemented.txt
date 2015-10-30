@@ -1,0 +1,18 @@
+Alphabet.java:
+	Alphabet(): constructor
+	printAll(): prints values
+	getValues(): returns array of values
+Derivative.java:
+	Derivative(char a, ExpTree tree): constructor
+	getDerivative(char c, ExpTree tree): computes deriv. given char and RE
+	v2(ExpTree t): nullification
+	v(ExpTree t): nullification
+ExpTree.java:
+	ExpTree(String s): constructor
+	ExpTree(Operation o): constructor
+	isEqual(ExpTree otherTree): tree equality check
+RandStrGen.java:
+	RandStrGen(Alphabet A): constructor
+	genString(int length): gen str of length from random chars in alphabet
+	genStrings(int numStrings, int length): run genString numStrings times
+	
