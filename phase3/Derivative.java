@@ -3,16 +3,16 @@ import phase3.ExpTree.Operation;
 
 public class Derivative {
     public ExpTree t;
-    
+
     public Derivative() {
         this.t = null;
     }
-    
+
     public Derivative(char a, ExpTree tree){
         this.t = getDerivative(a, tree);
-        
+
     }
-    
+
     public ExpTree getDerivative(char c, ExpTree tree) {
         // Leaf -> Contains a string
         if (tree.op == null) {
@@ -33,7 +33,7 @@ public class Derivative {
                newTree.right = getDerivative(c, tree.right);
                if (newTree.left.op == null && newTree.left.value.equals("@")) return newTree.right;
                else if (newTree.right.op == null && newTree.right.value.equals("@")) return newTree.left;
-               
+
                return newTree;
             }
             //INTERSECT
@@ -45,8 +45,10 @@ public class Derivative {
                         newTree.right.value)) {
                     return new ExpTree("@");
                 }
-                if (newTree.left.value.charAt(0) != newTree.right.value.charAt(0)) {
-                    return new ExpTree("&");
+                if (newTree.left.value != null && newTree.right.value != null) {
+                    if (newTree.left.value.charAt(0) != newTree.right.value.charAt(0)) {
+                        return new ExpTree("&");
+                    }
                 }
                 return newTree;
             }
@@ -69,7 +71,7 @@ public class Derivative {
                     if(newRight.left.value == "@") return new ExpTree("@");
                     else if(newRight.right.value == "@") return new ExpTree("@");
                     else if(newRight.left.value == "&") return newRight.right;
-                    else if(newRight.right.value == "&") return newRight.left;  
+                    else if(newRight.right.value == "&") return newRight.left;
                     else return new ExpTree(newRight.left.value + newRight.right.value);
                 }
                 ExpTree newTree = new ExpTree(Operation.UNION);
@@ -91,26 +93,28 @@ public class Derivative {
         }
         return null;
     }
-    
-    
-    
+
+
+
     public String v2(ExpTree t) {
         if (v(t)) return "&";
         else return "@";
     }
-    
+
     public boolean v(ExpTree t) {
         String val = t.value;
         Operation op = t.op;
-        if (val.equals("&")) return true;
-        else if (val.equals("@")) return false;
-        else if (val != null) return false;
+        if (val != null) {
+            if (val.equals("&")) return true;
+            else if (val.equals("@")) return false;
+            else return false;
+        }
         else if (op == Operation.CONCAT || op == Operation.INTERSECT) return v(t.left) && v(t.right);
         else if (op == Operation.UNION) return v(t.left) || v(t.right);
         else if (op == Operation.STAR) return true;
         else return false;
     }
-    
+
     public static void main(String[] args) {
 //        ExpTree a = new ExpTree("a");
 //        ExpTree b = new ExpTree("b");

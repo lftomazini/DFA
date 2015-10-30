@@ -37,12 +37,12 @@ public class REMatcher {
     public static void main(String[] args) {
         ExpTree ab = new ExpTree("ab");
         ExpTree ac = new ExpTree("ac");
-        ExpTree or = new ExpTree(Operation.INTERSECT);
+        ExpTree or = new ExpTree(Operation.UNION);
         or.left = ab;
         or.right = ac;
 
         REMatcher l = new REMatcher(or);
-        System.out.println(l.isMatch("a"));
+        System.out.println(l.isMatch("ab"));
     }
 
 }
