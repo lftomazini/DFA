@@ -76,7 +76,6 @@ public class Derivative {
                 newRight.right = getDerivative(c, tree.right);
                 if(newRight.left.value != null && newRight.right.value != null) {
                     if(newRight.left.value == "@") {
-                        System.out.println("returning null tree");
                         return new ExpTree("@");
                     }
                     else if(newRight.right.value.equals("@")) return new ExpTree("@");
@@ -92,11 +91,21 @@ public class Derivative {
             // STAR (value always on the right)
             else if (o == Operation.STAR) {
                 if(tree.right.value != null && tree.right.value.length() == 1) {
-                    if(tree.right.value.charAt(0) == c) return tree;
+                    System.out.println("right value is one character");
+                    if(tree.right.value.charAt(0) == c) {
+                        System.out.println("derivative is " + c);
+                        return tree;
+                    }
                     else return new ExpTree("@");
+                }
+                else if(tree.right.value != null) {
+                    if(tree.right.value.charAt(0) != c) {
+                        return new ExpTree("@");
+                    }
                 }
                 ExpTree newTree = new ExpTree(Operation.CONCAT);
                 newTree.left = getDerivative(c, tree.right);
+                if (newTree.left.value != null && newTree.left.value.equals("@")) return new ExpTree("@");
                 newTree.right = tree;
                 return newTree;
             }

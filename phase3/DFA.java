@@ -114,26 +114,35 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree ab = new ExpTree("a");
-        ExpTree ac = new ExpTree("b");
+        ExpTree a = new ExpTree("ab");
+        ExpTree b = new ExpTree("ba");
         ExpTree or = new ExpTree(Operation.UNION);
         ExpTree ba = new ExpTree("a");
         ExpTree ca = new ExpTree("c");
         ExpTree or2 = new ExpTree(Operation.UNION);
         ExpTree plus = new ExpTree(Operation.CONCAT);
-        or.left = ab;
-        or.right = ac;
-        or2.left = ba;
-        or2.right = ca;
-        plus.left = or2;
-        plus.right = or;
 
-        dfa.createDFA(plus);
-        System.out.println("done");
+        ExpTree star = new ExpTree(Operation.STAR);
+        ExpTree concat = new ExpTree(Operation.CONCAT);
+
+        or.left = a;
+        or.right = b;
+        star.right = or;
+        concat.left = b;
+        concat.right = star;
+
+        // or.left = ab;
+        // or.right = ac;
+        // or2.left = ba;
+        // or2.right = ca;
+        // plus.left = or2;
+        // plus.right = or;
+
+        dfa.createDFA(star);
         for(int i = 0; i < dfa.transitions.size; i++) {
             System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
-//        System.out.println(dfa.states.states[2].right);
+        System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
 
 //        System.out.println("new DFA");

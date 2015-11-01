@@ -23,14 +23,14 @@ public class REMatcher {
             for(int j = 0; j < transitions.length; j++) {
                 Delta transition = transitions[j];
                 if (transition.current == currentState && transition.letter == currentString.charAt(0)) {
-                    System.out.println(transition.next);
                     currentString = currentString.substring(1);
                     currentState = transition.next;
                     break;
                 }
             }
         }
-        if (states[currentState].value.equals("&")) return true;
+        if (states[currentState].op != null && states[currentState].op == Operation.STAR) return true;
+        if (states[currentState].value != null && states[currentState].value.equals("&")) return true;
         else return false;
     }
 
@@ -38,11 +38,13 @@ public class REMatcher {
         ExpTree ab = new ExpTree("ab");
         ExpTree ac = new ExpTree("ac");
         ExpTree or = new ExpTree(Operation.UNION);
+        ExpTree star = new ExpTree(Operation.STAR);
         or.left = ab;
         or.right = ac;
+        star.right = or;
 
-        REMatcher l = new REMatcher(or);
-        System.out.println(l.isMatch("ab"));
+        REMatcher l = new REMatcher(star);
+        System.out.println(l.isMatch("abababababaca"));
     }
 
 }
