@@ -35,16 +35,20 @@ public class REMatcher {
     }
 
     public static void main(String[] args) {
+        ExpTree hello = new ExpTree("cab");
         ExpTree ab = new ExpTree("ab");
         ExpTree ac = new ExpTree("ac");
         ExpTree or = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
+        ExpTree concat = new ExpTree(Operation.CONCAT);
         or.left = ab;
         or.right = ac;
         star.right = or;
+        concat.left = ab;
+        concat.right = ac;
 
-        REMatcher l = new REMatcher(star);
-        System.out.println(l.isMatch("abababababaca"));
+        REMatcher l = new REMatcher(concat);
+        System.out.println(l.isMatch("abac"));
     }
 
 }

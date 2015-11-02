@@ -114,8 +114,8 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree a = new ExpTree("ab");
-        ExpTree b = new ExpTree("ba");
+        ExpTree ab = new ExpTree("ab");
+        ExpTree ac = new ExpTree("ac");
         ExpTree or = new ExpTree(Operation.UNION);
         ExpTree ba = new ExpTree("a");
         ExpTree ca = new ExpTree("c");
@@ -125,11 +125,11 @@ public class DFA {
         ExpTree star = new ExpTree(Operation.STAR);
         ExpTree concat = new ExpTree(Operation.CONCAT);
 
-        or.left = a;
-        or.right = b;
+        or.left = ab;
+        or.right = ab;
         star.right = or;
-        concat.left = b;
-        concat.right = star;
+        concat.left = ab;
+        concat.right = ac;
 
         // or.left = ab;
         // or.right = ac;
@@ -138,11 +138,11 @@ public class DFA {
         // plus.left = or2;
         // plus.right = or;
 
-        dfa.createDFA(star);
+        dfa.createDFA(concat);
         for(int i = 0; i < dfa.transitions.size; i++) {
             System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
-        System.out.println(dfa.states.states[0].op);
+        // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
 
 //        System.out.println("new DFA");

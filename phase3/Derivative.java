@@ -32,11 +32,7 @@ public class Derivative {
                newTree.left = getDerivative(c, tree.left);
                newTree.right = getDerivative(c, tree.right);
                if (newTree.left.op == null && newTree.left.value.equals("@")) return newTree.right;
-               else if (newTree.right.op == null && newTree.right.value.equals("@")) {
-                   System.out.println("retugning left tree");
-                   return newTree.left;
-               }
-
+               else if (newTree.right.op == null && newTree.right.value.equals("@")) return newTree.left;
                return newTree;
             }
             //INTERSECT
@@ -117,11 +113,9 @@ public class Derivative {
 
     public String v2(ExpTree t) {
         if (v(t)) {
-            System.out.println("v2 is true");
             return "&";
         }
         else {
-            System.out.println("v2 of " + t.op + " is false");
             return "@";
         }
     }
