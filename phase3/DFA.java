@@ -62,7 +62,6 @@ public class DFA {
     public States states;
     public char[] alphabet;
     public Trans transitions;
-    public int[] finalStates;
     public Derivative dObj;
 
     public DFA() {
@@ -71,7 +70,6 @@ public class DFA {
 //        this.alphabet = abc.getValues();
         this.alphabet = abc.getValues();
         this.transitions = new Trans();
-        this.finalStates = new int[100];
         this.dObj = new Derivative();
     }
 
