@@ -95,9 +95,7 @@ public class Derivative {
             // STAR (value always on the right)
             else if (o == Operation.STAR) {
                 if(tree.right.value != null && tree.right.value.length() == 1) {
-                    System.out.println("right value is one character");
                     if(tree.right.value.charAt(0) == c) {
-                        System.out.println("derivative is " + c);
                         return tree;
                     }
                     else return new ExpTree("@");
