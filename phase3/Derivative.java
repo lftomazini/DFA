@@ -64,8 +64,16 @@ public class Derivative {
                     if(newLeft.right.value.equals("&")) return newLeft.left;
                     else if(newLeft.right.value.equals("@")) return new ExpTree("@");
                 }
-                else if (newLeft.left.value != null && newLeft.right.value != null)
+                else if (newLeft.left.value != null && newLeft.right.value != null) {
                     return new ExpTree(newLeft.left.value + newLeft.right.value);
+                }
+
+                if (tree.left.value != null && tree.right.value != null && tree.left.value.charAt(0) == c) {
+                    ExpTree concat = new ExpTree(Operation.CONCAT);
+                    concat.left = getDerivative(c, tree.left);
+                    concat.right = tree.right;
+                    return concat;
+                }
 
                 ExpTree newRight = new ExpTree(Operation.CONCAT);
                 newRight.left = new ExpTree(v2(tree.left));

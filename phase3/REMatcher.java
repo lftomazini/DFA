@@ -36,7 +36,7 @@ public class REMatcher {
 
     public static void main(String[] args) {
         ExpTree hello = new ExpTree("cab");
-        ExpTree ab = new ExpTree("ab");
+        ExpTree ab = new ExpTree("hello");
         ExpTree ac = new ExpTree("ac");
         ExpTree or = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
@@ -48,7 +48,7 @@ public class REMatcher {
         concat.right = ac;
 
         REMatcher l = new REMatcher(concat);
-        System.out.println(l.isMatch("abac"));
+        System.out.println(l.isMatch("helloac"));
     }
 
 }

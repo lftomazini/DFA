@@ -69,10 +69,7 @@ public class DFA {
         this.states = new States();
         Alphabet abc = new Alphabet();
 //        this.alphabet = abc.getValues();
-        this.alphabet = new char[3];
-        this.alphabet[0] = 'a';
-        this.alphabet[1] = 'b';
-        this.alphabet[2] = 'c';
+        this.alphabet = abc.getValues();
         this.transitions = new Trans();
         this.finalStates = new int[100];
         this.dObj = new Derivative();
@@ -114,8 +111,8 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree ab = new ExpTree("ab");
-        ExpTree ac = new ExpTree("ac");
+        ExpTree ab = new ExpTree("abc");
+        ExpTree ac = new ExpTree("b");
         ExpTree or = new ExpTree(Operation.UNION);
         ExpTree ba = new ExpTree("a");
         ExpTree ca = new ExpTree("c");
