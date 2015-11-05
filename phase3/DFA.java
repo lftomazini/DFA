@@ -62,19 +62,14 @@ public class DFA {
     public States states;
     public char[] alphabet;
     public Trans transitions;
-    public int[] finalStates;
     public Derivative dObj;
 
     public DFA() {
         this.states = new States();
         Alphabet abc = new Alphabet();
 //        this.alphabet = abc.getValues();
-        this.alphabet = new char[3];
-        this.alphabet[0] = 'a';
-        this.alphabet[1] = 'b';
-        this.alphabet[2] = 'c';
+        this.alphabet = abc.getValues();
         this.transitions = new Trans();
-        this.finalStates = new int[100];
         this.dObj = new Derivative();
     }
 
@@ -114,18 +109,35 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree ab = new ExpTree("ab");
-        ExpTree ac = new ExpTree("ac");
+        ExpTree ab = new ExpTree("abc");
+        ExpTree ac = new ExpTree("b");
         ExpTree or = new ExpTree(Operation.UNION);
-        or.left = ab;
-        or.right = ac;
+        ExpTree ba = new ExpTree("a");
+        ExpTree ca = new ExpTree("c");
+        ExpTree or2 = new ExpTree(Operation.UNION);
+        ExpTree plus = new ExpTree(Operation.CONCAT);
 
-        dfa.createDFA(or);
-        System.out.println("done");
+        ExpTree star = new ExpTree(Operation.STAR);
+        ExpTree concat = new ExpTree(Operation.CONCAT);
+
+        or.left = ab;
+        or.right = ab;
+        star.right = or;
+        concat.left = ab;
+        concat.right = ac;
+
+        // or.left = ab;
+        // or.right = ac;
+        // or2.left = ba;
+        // or2.right = ca;
+        // plus.left = or2;
+        // plus.right = or;
+
+        dfa.createDFA(concat);
         for(int i = 0; i < dfa.transitions.size; i++) {
             System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
-//        System.out.println(dfa.states.states[2].right);
+        // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
 
 //        System.out.println("new DFA");

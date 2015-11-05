@@ -23,26 +23,32 @@ public class REMatcher {
             for(int j = 0; j < transitions.length; j++) {
                 Delta transition = transitions[j];
                 if (transition.current == currentState && transition.letter == currentString.charAt(0)) {
-                    System.out.println(transition.next);
                     currentString = currentString.substring(1);
                     currentState = transition.next;
                     break;
                 }
             }
         }
-        if (states[currentState].value.equals("&")) return true;
+        if (states[currentState].op != null && states[currentState].op == Operation.STAR) return true;
+        if (states[currentState].value != null && states[currentState].value.equals("&")) return true;
         else return false;
     }
 
     public static void main(String[] args) {
-        ExpTree ab = new ExpTree("ab");
+        ExpTree hello = new ExpTree("cab");
+        ExpTree ab = new ExpTree("hello");
         ExpTree ac = new ExpTree("ac");
-        ExpTree or = new ExpTree(Operation.INTERSECT);
+        ExpTree or = new ExpTree(Operation.UNION);
+        ExpTree star = new ExpTree(Operation.STAR);
+        ExpTree concat = new ExpTree(Operation.CONCAT);
         or.left = ab;
         or.right = ac;
+        star.right = or;
+        concat.left = ab;
+        concat.right = ac;
 
-        REMatcher l = new REMatcher(or);
-        System.out.println(l.isMatch("a"));
+        REMatcher l = new REMatcher(concat);
+        System.out.println(l.isMatch("helloac"));
     }
 
 }
