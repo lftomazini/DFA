@@ -113,7 +113,7 @@ public class DFA {
         DFA dfa = new DFA();
 
         ExpTree a = new ExpTree("a");
-        ExpTree aa = new ExpTree("aa");
+        ExpTree aa = new ExpTree("ab");
         ExpTree union = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
         union.left = a;
@@ -133,8 +133,7 @@ public class DFA {
         }
 
         System.out.println(dfa.states.states[1].op);
-        System.out.println(dfa.states.states[2].value);
-        System.out.println(dfa.dObj.v2(dfa.states.states[1]));
+        System.out.println(dfa.states.states[1].left.right.value);
 
         // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);

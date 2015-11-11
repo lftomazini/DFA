@@ -55,21 +55,6 @@ public class Derivative {
             }
             // CONCAT
             else if (o == Operation.CONCAT) {
-                ExpTree newLeft = new ExpTree(Operation.CONCAT);
-                newLeft.left = getDerivative(c, tree.left);
-                newLeft.right = tree.right;
-                if(newLeft.left.value != null) {
-                    if(newLeft.left.value.equals("@")) return new ExpTree("@");
-                    else if(newLeft.left.value.equals("&")) return newLeft.right;
-                }
-                else if(newLeft.right.value != null) {
-                    if(newLeft.right.value.equals("&")) return newLeft.left;
-                    else if(newLeft.right.value.equals("@")) return new ExpTree("@");
-                }
-                else if (newLeft.left.value != null && newLeft.right.value != null) {
-                    return new ExpTree(newLeft.left.value + newLeft.right.value);
-                }
-
                 if (tree.left.value != null && tree.right.value != null && tree.left.value.charAt(0) == c) {
                     ExpTree concat = new ExpTree(Operation.CONCAT);
                     concat.left = getDerivative(c, tree.left);
@@ -77,18 +62,26 @@ public class Derivative {
                     return concat;
                 }
 
-                ExpTree newRight = new ExpTree(Operation.CONCAT);
-                newRight.left = new ExpTree(v2(tree.left));
-                newRight.right = getDerivative(c, tree.right);
-                if(newRight.left.value != null && newRight.right.value != null) {
-                    if(newRight.left.value == "@") {
-                        return new ExpTree("@");
-                    }
-                    else if(newRight.right.value.equals("@")) return new ExpTree("@");
-                    else if(newRight.left.value.equals("&")) return newRight.right;
-                    else if(newRight.right.value.equals("&")) return newRight.left;
-                    else return new ExpTree(newRight.left.value + newRight.right.value);
+                ExpTree newLeft = new ExpTree(Operation.CONCAT);
+                newLeft.left = getDerivative(c, tree.left);
+                newLeft.right = tree.right;
+                if(newLeft.left.value != null) {
+                    if(newLeft.left.value.equals("@")) newLeft = new ExpTree("@");
+                    else if(newLeft.left.value.equals("&")) newLeft = newLeft.right;
                 }
+                else if(newLeft.right.value != null) {
+                    if(newLeft.right.value.equals("&")) newLeft = newLeft.left;
+                    else if(newLeft.right.value.equals("@")) newLeft = new ExpTree("@");
+                }
+                else if (newLeft.left.value != null && newLeft.right.value != null) {
+                    return new ExpTree(newLeft.left.value + newLeft.right.value);
+                }
+
+                ExpTree newRight = new ExpTree(Operation.CONCAT);
+                String nullable = v2(tree.left);
+                if(nullable.equals("@")) newRight = new ExpTree("@");
+                else if(nullable.equals("&")) newRight = getDerivative(c, tree.right);
+
                 ExpTree newTree = new ExpTree(Operation.UNION);
                 newTree.left = newLeft;
                 newTree.right = newRight;

@@ -37,7 +37,7 @@ public class REMatcher {
 
     public static void main(String[] args) {
         ExpTree a = new ExpTree("a");
-        ExpTree aa = new ExpTree("aa");
+        ExpTree aa = new ExpTree("ab");
         ExpTree union = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
         union.left = a;
