@@ -29,26 +29,23 @@ public class REMatcher {
                 }
             }
         }
-        if (states[currentState].op != null && states[currentState].op == Operation.STAR) return true;
-        if (states[currentState].value != null && states[currentState].value.equals("&")) return true;
+
+        // if final state contains & then it accepts
+        if(this.dfa.dObj.v2(states[currentState]).equals("&")) return true;
         else return false;
     }
 
     public static void main(String[] args) {
-        ExpTree hello = new ExpTree("cab");
-        ExpTree ab = new ExpTree("hello");
-        ExpTree ac = new ExpTree("ac");
-        ExpTree or = new ExpTree(Operation.UNION);
+        ExpTree a = new ExpTree("a");
+        ExpTree aa = new ExpTree("aa");
+        ExpTree union = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
-        ExpTree concat = new ExpTree(Operation.CONCAT);
-        or.left = ab;
-        or.right = ac;
-        star.right = or;
-        concat.left = ab;
-        concat.right = ac;
+        union.left = a;
+        union.right = aa;
+        star.right = union;
 
-        REMatcher l = new REMatcher(concat);
-        System.out.println(l.isMatch("helloac"));
+        REMatcher l = new REMatcher(star);
+        System.out.println(l.isMatch("aa"));
     }
 
 }

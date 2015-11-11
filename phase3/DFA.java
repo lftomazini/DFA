@@ -133,6 +133,9 @@ public class DFA {
         }
 
         System.out.println(dfa.states.states[1].op);
+        System.out.println(dfa.states.states[2].value);
+        System.out.println(dfa.dObj.v2(dfa.states.states[1]));
+
         // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
 
