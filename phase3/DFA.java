@@ -68,7 +68,10 @@ public class DFA {
         this.states = new States();
         Alphabet abc = new Alphabet();
 //        this.alphabet = abc.getValues();
-        this.alphabet = abc.getValues();
+        this.alphabet = new char[3];
+        this.alphabet[0] = 'a';
+        this.alphabet[1] = 'b';
+        this.alphabet[2] = 'c';
         this.transitions = new Trans();
         this.dObj = new Derivative();
     }
@@ -109,22 +112,13 @@ public class DFA {
     public static void main(String[] args) {
         DFA dfa = new DFA();
 
-        ExpTree ab = new ExpTree("abc");
-        ExpTree ac = new ExpTree("b");
-        ExpTree or = new ExpTree(Operation.UNION);
-        ExpTree ba = new ExpTree("a");
-        ExpTree ca = new ExpTree("c");
-        ExpTree or2 = new ExpTree(Operation.UNION);
-        ExpTree plus = new ExpTree(Operation.CONCAT);
-
+        ExpTree a = new ExpTree("a");
+        ExpTree aa = new ExpTree("aa");
+        ExpTree union = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
-        ExpTree concat = new ExpTree(Operation.CONCAT);
-
-        or.left = ab;
-        or.right = ab;
-        star.right = or;
-        concat.left = ab;
-        concat.right = ac;
+        union.left = a;
+        union.right = aa;
+        star.right = union;
 
         // or.left = ab;
         // or.right = ac;
@@ -133,10 +127,12 @@ public class DFA {
         // plus.left = or2;
         // plus.right = or;
 
-        dfa.createDFA(concat);
+        dfa.createDFA(star);
         for(int i = 0; i < dfa.transitions.size; i++) {
             System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
+
+        System.out.println(dfa.states.states[1].op);
         // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
 
