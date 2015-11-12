@@ -1,6 +1,8 @@
 package phase3;
 import phase3.ExpTree.Operation;
 
+// javac phase3/Derivative.java phase3/ExpTree.java
+
 public class Derivative {
     public ExpTree t;
 
@@ -116,6 +118,18 @@ public class Derivative {
 
     // Helper Functions
 
+    // Calculates the depth of an ExpTree
+    public int depth(ExpTree t) {
+        if(t == null) return 0;
+        if(t.op == null) return 1;
+        else {
+            int rdepth = 1 + depth(t.left);
+            int ldepth = 1 + depth(t.right);
+            if(rdepth < ldepth) return ldepth;
+            else return rdepth;
+        }
+    }
+
     // Simplifies a tree to it's most basic tree using the rules from 4.1
     public ExpTree simplify(ExpTree t) {
         if(t.op == null) return t;
@@ -147,8 +161,15 @@ public class Derivative {
         if(op == Operation.INTERSECT) {
             // r and r = r
             if(left.isEqual(right)) return right;
+            // r and s = s and r (put bigger tree on left)
+            int ldepth = depth(left);
+            int rdepth = depth(right);
+            if(rdepth > ldepth) {
+                simp.left = right;
+                simp.right = left;
+            }
             // @ and r || r and @ = @
-            else if(left.value != null && left.value == "@") return new ExpTree("@");
+            if(left.value != null && left.value == "@") return new ExpTree("@");
             else if(right.value != null && right.value == "@") return new ExpTree("@");
             // Simplified
             else return simp;
@@ -158,6 +179,13 @@ public class Derivative {
         else if(op == Operation.UNION) {
             // r+r = r
             if(left.isEqual(right)) return right;
+            // r+s = s+r (put bigger tree on left)
+            int ldepth = depth(left);
+            int rdepth = depth(right);
+            if(rdepth > ldepth) {
+                simp.left = right;
+                simp.right = left;
+            }
             // @+r || r+@ = r
             else if(left.value != null && left.value == "@") return right;
             else if(right.value != null && right.value == "@") return left;
@@ -207,6 +235,7 @@ public class Derivative {
     }
 
     public static void main(String[] args) {
+        // Simplify Testing
         ExpTree and = new ExpTree(Operation.INTERSECT);
         ExpTree concat = new ExpTree(Operation.CONCAT);
         concat.left = new ExpTree("&");
@@ -219,7 +248,33 @@ public class Derivative {
         and.right = new ExpTree("ab");
         Derivative d = new Derivative();
         ExpTree simp = d.simplify(and);
-        System.out.println(simp.value);
+        // System.out.println(simp.value);
+        // System.out.println(d.depth(and));
+
+        // Depth Testing
+        ExpTree intersect = new ExpTree(Operation.INTERSECT);
+        intersect.left = new ExpTree("a");
+        ExpTree union = new ExpTree(Operation.UNION);
+        union.left = new ExpTree("b");
+        union.right = new ExpTree("c");
+        intersect.right = union;
+        // System.out.println(d.depth(intersect));
+
+        ExpTree u = new ExpTree(Operation.UNION);
+        ExpTree n1 = new ExpTree(Operation.INTERSECT);
+        ExpTree n2 = new ExpTree(Operation.INTERSECT);
+        n1.left = new ExpTree("a");
+        ExpTree c = new ExpTree(Operation.CONCAT);
+        c.left = new ExpTree("b");
+        c.right = new ExpTree("c");
+        n1.right = c;
+        n2.left = c;
+        n2.right = new ExpTree("a");
+        u.right = n1;
+        u.left = n2;
+
+        ExpTree simp2 = d.simplify(u);
+        System.out.println(simp2.left.right.value);
 
     }
 }
