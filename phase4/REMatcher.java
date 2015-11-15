@@ -38,7 +38,7 @@ public class REMatcher {
             return false;
         }
     }
-
+    
     public static void main(String[] args) {
         ExpTree a = new ExpTree("a");
         ExpTree aa = new ExpTree("ab");

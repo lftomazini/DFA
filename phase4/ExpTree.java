@@ -63,7 +63,7 @@ public class ExpTree {
     }
 
     public enum Operation {
-        CONCAT, STAR, UNION, INTERSECT, NOT
+        CONCAT, STAR, UNION, INTERSECT
     }
 
     public static void main(String[] args) {

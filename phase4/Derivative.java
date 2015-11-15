@@ -251,5 +251,6 @@ public class Derivative {
         u.right = new ExpTree("a");
         ExpTree der = d.getDerivative('a',u);
 //        System.out.println(der.value);
+        
     }
 }

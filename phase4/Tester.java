@@ -1,61 +1,108 @@
 package phase4;
 
 import phase4.ExpTree.Operation;
+import java.util.Random;
 
-// javac phase3/Tester.java phase3/REMatcher.java phase3/DFA.java phase3/ExpTree.java phase3/Alphabet.java
+// javac phase4/Tester.java phase4/REMatcher.java phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
 public class Tester {
 
-    public static void main(String[] args) {
-        ExpTree c = new ExpTree("c");
-        ExpTree ab = new ExpTree("ab");
-
-        ExpTree cab = new ExpTree(Operation.CONCAT);
-        cab.left = c;
-        cab.right = ab;
-
-        ExpTree dac = new ExpTree("dac");
-
-        ExpTree or = new ExpTree(Operation.UNION);
-        or.left = cab;
-        or.right = dac;
-
-        ExpTree a = new ExpTree("a");
-        ExpTree astar = new ExpTree(Operation.STAR);
-        astar.right = a;
-
-        ExpTree b = new ExpTree("b");
-        ExpTree bstar = new ExpTree(Operation.STAR);
-        bstar.right = b;
-
-        ExpTree astarbstar = new ExpTree(Operation.UNION);
-        astarbstar.left = astar;
-        astarbstar.right = bstar;
-
-        ExpTree or2 = new ExpTree(Operation.UNION);
-        or2.left = or;
-        or2.right = astarbstar;
-
-        REMatcher re = new REMatcher(or2);
-        RandStrGen rand = new RandStrGen("abcd");
-
-        System.out.println("Checking soundness and completeness...");
-        System.out.println(
-                "Language: ((c CONCAT ab) UNION dac UNION (a STAR UNION b STAR))");
-        System.out.println(
-                "Generating 100 random strings and checking if they match the above RE...\n");
-        String[] randomStrings = rand.genStrings(100, 3);
-        for (int i = 0; i < randomStrings.length; i++) {
-            String s = randomStrings[i];
-            System.out.println(s + ": " + re.isMatch(s));
+    public ExpTree randomRE(int depth, int prob) {
+        RandStrGen randString = new RandStrGen("abc");
+        Random rand = new Random();
+        
+        int leafProb = rand.nextInt(prob) + 1;
+        if(leafProb > depth) {        
+            String val = randString.genString(rand.nextInt(3) + 1);
+            return new ExpTree(val);
         }
-
-        System.out.println(
-                "\nChecking efficency of the same regular expression...");
-        System.out.println("Total number of states:      " + re.dfa.states.size);
-        System.out.println(
-                "Total number of transitions: " + re.dfa.transitions.size);
-        System.out.println(
-                "The time it takes to create a DFA is O(|states|^2 * |transitions|)");
+        else {
+            Operation op;
+            int r = rand.nextInt(Operation.values().length);
+            switch(r) {
+                case 0: op = Operation.CONCAT;
+                        break;
+                case 1: op = Operation.UNION;
+                        break;
+                case 2: op = Operation.STAR;
+                        break;
+                case 3: op = Operation.INTERSECT;
+                        break;
+                default: op = null;
+            }
+            
+            ExpTree tree = new ExpTree(op);
+            tree.right = randomRE(depth - 1, prob);
+            if(op != Operation.STAR) tree.left = randomRE(depth - 1, prob);
+            return tree;
+               
+        }
     }
-
+    
+    public String printRE(ExpTree re) {
+        String ans = "";
+        ans = ans + re.op + "(";
+        if(re.op != Operation.STAR) {
+            if(re.left.value != null) ans = ans + re.left.value + ",";
+            else ans = ans + printRE(re.left) + ",";
+        }
+        if(re.right.value != null) ans = ans + re.right.value;
+        else ans = ans + printRE(re.right);
+        ans = ans + ")";
+        return ans;
+        
+    }
+    
+    public static void main(String[] args) {
+        Tester t = new Tester();
+        ExpTree randTree = t.randomRE(4,4);
+        System.out.println(t.printRE(randTree));
+        DFA dfa = new DFA();
+        dfa.createDFA(randTree);
+        for (int i = 0; i < dfa.transitions.size; i++) {
+            System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
+        }
+        
+        RandStrGen rsg = new RandStrGen("abc");
+        String[] randStrings = new String[92];
+        randStrings[0] = "a";
+        randStrings[1] = "b";
+        randStrings[2] = "c";
+        randStrings[3] = "aa";
+        randStrings[4] = "ab";
+        randStrings[5] = "ac";
+        randStrings[6] = "ba";
+        randStrings[7] = "bb";
+        randStrings[8] = "bc";
+        randStrings[9] = "ca";
+        randStrings[10] = "cb";
+        randStrings[11] = "cc";
+        int i = 12;
+        for(int j = 3; j < 7; j++) {
+            for(int k = 0; k < 20; k++) {
+                randStrings[i] = rsg.genString(j);
+                i++;
+            }
+        }
+        
+        REMatcher matcher = new REMatcher(randTree);
+        String[] matches = new String[92];
+        String[] nots = new String[92];
+        int matchIndex = 0;
+        int notIndex = 0;
+        for(i = 0; i < 92; i++) {
+            if(matcher.isMatch(randStrings[i])) {
+                matches[matchIndex] = randStrings[i];
+                matchIndex++;
+            }
+            else {
+                nots[notIndex] = randStrings[i];
+                notIndex++;
+            }
+        }
+        String toPrint = "matches: ";
+        for(int a = 0; a < matchIndex; a++) toPrint = toPrint + matches[a] + ", ";
+        toPrint = toPrint + "\nnots: ";
+        for(int a = 0; a < notIndex; a++) toPrint = toPrint + nots[a] +  ", ";
+        System.out.println(toPrint);
+    }
 }
