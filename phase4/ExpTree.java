@@ -27,8 +27,15 @@ public class ExpTree {
 //        if(this.left != null && otherTree.right == null) return false;
 //        if(this.left == null && otherTree.left == null && this.right == null && otherTree.right == null && this.value == otherTree.value);
 //        System.out.println(this.op + this.value + otherTree.op + otherTree.value);
-        if (this.op == otherTree.op && this.value == otherTree.value) {
-            if (this.left != null && otherTree.left != null && this.right != null && otherTree.right != null) {
+        boolean equalVals = true;
+        if(this.value != null && otherTree.value != null && !this.value.equals(otherTree.value)) {
+            equalVals = false;
+        }
+        if (this.op == otherTree.op && equalVals) {
+            if (this.op == Operation.STAR) {
+                return this.right.isEqual(otherTree.right);
+            }
+            else if (this.left != null && otherTree.left != null && this.right != null && otherTree.right != null) {
                 return this.left.isEqual(otherTree.left) && this.right.isEqual(
                         otherTree.right);
             } else {
@@ -47,6 +54,7 @@ public class ExpTree {
                 return left && right;
             }
         }
+//        System.out.println("returning false");
         return false;
 //        if (this.op==otherTree.op && this.value==otherTree.value &&
 //                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {

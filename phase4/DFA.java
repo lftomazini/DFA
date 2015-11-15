@@ -1,7 +1,7 @@
 package phase4;
 
 import phase4.ExpTree.Operation;
-// javac phase3/DFA.java phase3/ExpTree.java phase3/Alphabet.java
+// javac phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
 
 class Delta {
     public int current;
@@ -94,7 +94,7 @@ public class DFA {
                 for (int j = 0; j < this.states.size; j++) {
                     if (derivative.isEqual(states.states[j])) {
                         transitions.add(new Delta(index, this.alphabet[i], j));
-                        // System.out.println(index + " " + this.alphabet[i] + " " + j);
+//                         System.out.println(index + " " + this.alphabet[i] + " " + j);
                         found = true;
                         break;
                     }
@@ -137,8 +137,8 @@ public class DFA {
                     dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
 
-        System.out.println(dfa.states.states[1].op);
-        System.out.println(dfa.states.states[1].left.right.value);
+//        System.out.println(dfa.states.states[1].op);
+//        System.out.println(dfa.states.states[1].left.value);
 
         // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
