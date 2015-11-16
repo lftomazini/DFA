@@ -9,7 +9,7 @@ import phase4.ExpTree.Operation;
 public class Tester {
     public static int BASE;
     public static final int MAX_POWER = 6;
-    public static final int DEPTH = 2;
+    public static final int DEPTH = 7;
 
     public ExpTree randomRE(int depth, int prob) {
         RandStrGen randString = new RandStrGen("abc");
@@ -94,6 +94,7 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
+        System.out.println("Generating tree of depth " + DEPTH + "...");
         ExpTree randTree = t.randomRE(DEPTH, DEPTH);
         System.out.println(t.printRE(randTree));
         DFA dfa = new DFA();
