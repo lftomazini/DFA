@@ -2,12 +2,14 @@ package phase4;
 
 import java.util.ArrayList;
 import java.util.Random;
+// import java.util.Math;
 import phase4.ExpTree.Operation;
 
 // javac phase4/Tester.java phase4/REMatcher.java phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
 public class Tester {
     public static int BASE;
-    public static final int MAX_POWER = 5;
+    public static final int MAX_POWER = 6;
+    public static final int DEPTH = 2;
 
     public ExpTree randomRE(int depth, int prob) {
         RandStrGen randString = new RandStrGen("abc");
@@ -92,14 +94,14 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
-        ExpTree randTree = t.randomRE(4, 4);
+        ExpTree randTree = t.randomRE(DEPTH, DEPTH);
         System.out.println(t.printRE(randTree));
         DFA dfa = new DFA();
         dfa.createDFA(randTree);
-        for (int i = 0; i < dfa.transitions.size; i++) {
-            System.out.println(
-                    dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
-        }
+        // for (int i = 0; i < dfa.transitions.size; i++) {
+        //     System.out.println(
+        //             dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
+        // }
 
         String alphabet = "abc";
         RandStrGen rsg = new RandStrGen(alphabet);
@@ -118,14 +120,18 @@ public class Tester {
                 nots.add(randStrings.get(i));
             }
         }
-        String toPrint = "matches: ";
+        String toPrint = "matches for all strings of length " + MAX_POWER + " or less: ";
         for (int a = 0; a < matches.size(); a++) {
-            toPrint = toPrint + matches.get(a) + ", ";
+            toPrint = toPrint + matches.get(a);
+            if(a != matches.size() - 1) toPrint = toPrint + ", ";
         }
-//        toPrint = toPrint + "\nnots: ";
-//        for (int a = 0; a < nots.size(); a++) {
-//            toPrint = toPrint + nots.get(a) + ", ";
-//        }
         System.out.println(toPrint);
+
+        System.out.println("\nDFA Information");
+        DFA ourdfa = matcher.dfa;
+        System.out.println("---------------");
+        System.out.println("Number of states (Q):                            " + ourdfa.states.size);
+        System.out.println("Number of transitions (Q x |Sigma|):             " + ourdfa.transitions.size);
+        System.out.println("Steps to create DFA (Q^2 x |Sigma| x 2^(depth)): " + (int)(Math.pow(ourdfa.states.size, 2) * ourdfa.transitions.size * Math.pow(2, DEPTH)));
     }
 }
