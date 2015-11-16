@@ -7,4 +7,4 @@
 ## Phase 4 Notes:
 - compile all files: 'make'
 - remove class files: 'make clean'
-- Tester.java can be run to test the creation of a DFA and print out the number of states it has, the number of transistions it has (Q*|Sigma|), and the number of steps required to create the DFA (|Q|^2 * |Sigma| * 2^(depth)). Before running Tester.java, set the MAX_POWER and DEPTH static variables defined just beneath the class declaration statement to the values of your choosing.
+- Tester.java can be run to test the creation of a DFA and print out the number of states it has, the number of transistions it has (Q*|Sigma|), and the number of steps required to create the DFA (|Q|^2 * |Sigma| * 2^(depth)). Before running Tester.java, set the MAX_POWER, DEPTH, and ALPHABET static variables defined just beneath the class declaration statement to the values of your choosing.

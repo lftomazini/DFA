@@ -10,9 +10,10 @@ public class Tester {
     public static int BASE;
     public static final int MAX_POWER = 6;
     public static final int DEPTH = 7;
+    public static final String ALPHABET = "abc";
 
     public ExpTree randomRE(int depth, int prob) {
-        RandStrGen randString = new RandStrGen("abc");
+        RandStrGen randString = new RandStrGen(ALPHABET);
         Random rand = new Random();
 
         int leafProb = rand.nextInt(prob) + 1;
@@ -94,7 +95,7 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
-        System.out.println("Generating tree of depth " + DEPTH + "...");
+        System.out.println("Generating tree with alphabet \"" + ALPHABET + "\" of depth " + DEPTH + "...");
         ExpTree randTree = t.randomRE(DEPTH, DEPTH);
         System.out.println(t.printRE(randTree));
         DFA dfa = new DFA();
