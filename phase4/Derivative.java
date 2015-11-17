@@ -213,23 +213,21 @@ public class Derivative {
             } else if (left.value != null && right.value != null) {
                 return new ExpTree(left.value + right.value);
             } // Weird Case
-            else if (left.op != null && right.op != null
-                     && left.op == Operation.UNION && right.op == Operation.STAR
-                     && right.right.op != null && right.right.op == Operation.UNION
-                     && left.left.value != null && left.right.value != null
-                     && right.right.left.value != null && right.right.right.value != null) {
-                String leftVal = left.left.value;
-                String rightVal = left.right.value;
-                if (leftVal.equals("&") || right.right.left.value.indexOf(
-                        leftVal) == 0
-                    || right.right.right.value.indexOf(leftVal) == 0 || right.right.left.value.indexOf(
-                                rightVal) == 0
-                    || right.right.right.value.indexOf(rightVal) == 0 || rightVal.equals(
-                                "&")) {
-                    return right;
-                }
-                return simp;
-            } // Simplified
+            //            else if(left.op != null && right.op != null &&
+            //                    left.op == Operation.UNION && right.op == Operation.STAR &&
+            //                    right.right.op != null && right.right.op == Operation.UNION &&
+            //                    left.left.value != null && left.right.value != null &&
+            //                    right.right.left.value != null && right.right.right.value != null) {
+            //                String leftVal = left.left.value;
+            //                String rightVal = left.right.value;
+            //                if(leftVal.equals("&") || right.right.left.value.indexOf(leftVal) == 0 ||
+            //                   right.right.right.value.indexOf(leftVal) == 0 || right.right.left.value.indexOf(rightVal) == 0 ||
+            //                   right.right.right.value.indexOf(rightVal) == 0 || rightVal.equals("&")) {
+            //                    return right;
+            //                }
+            //                return simp;
+            //            }
+            // Simplified
             else {
                 return simp;
             }
