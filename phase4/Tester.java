@@ -45,6 +45,16 @@ public class Tester {
             if (op != Operation.STAR) {
                 tree.left = randomRE(depth - 1, prob);
             }
+	    /*
+	    if (op != Operation.STAR) {
+                tree.left = randomRE(size - 1, prob);
+            }else{
+		int i = rand.nextInt(size);
+		tree.left = randomRE(i, prob);
+		tree.right = randomRE(size -i, prob);
+		}*/
+
+	    
             return tree;
 
         }
