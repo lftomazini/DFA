@@ -1,6 +1,7 @@
-package phase3;
-import phase3.ExpTree.Operation;
-// javac phase3/DFA.java phase3/ExpTree.java phase3/Alphabet.java
+package phase4;
+
+import phase4.ExpTree.Operation;
+// javac phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
 
 class Delta {
     public int current;
@@ -26,7 +27,7 @@ class Trans {
     public void add(Delta item) {
         if (this.size == this.trans.length) {
             Delta[] temp = new Delta[this.trans.length * 2];
-            for(int i = 0; i < this.trans.length; i++) {
+            for (int i = 0; i < this.trans.length; i++) {
                 temp[i] = this.trans[i];
             }
             this.trans = temp;
@@ -48,7 +49,7 @@ class States {
     public void add(ExpTree item) {
         if (this.size == this.states.length) {
             ExpTree[] temp = new ExpTree[this.states.length * 2];
-            for(int i = 0; i < this.states.length; i++) {
+            for (int i = 0; i < this.states.length; i++) {
                 temp[i] = this.states[i];
             }
             this.states = temp;
@@ -81,30 +82,34 @@ public class DFA {
         // go through alphabet creating transitions adding new states when necessary
         int index = 0;
         // for each state in the DFA
-        while(true) {
+        while (true) {
             // for each letter in the alphabet
             boolean noNew = true;
-            for(int i = 0; i < this.alphabet.length; i++) {
-                ExpTree derivative = this.dObj.getDerivative(this.alphabet[i], this.states.states[index]);
+            for (int i = 0; i < this.alphabet.length; i++) {
+                ExpTree derivative = this.dObj.getDerivative(this.alphabet[i],
+                                                             this.states.states[index]);
                 // System.out.println(derivative.value);
                 // for each state in Q
                 boolean found = false;
-                for(int j = 0; j < this.states.size; j++) {
-                    if(derivative.isEqual(states.states[j])) {
+                for (int j = 0; j < this.states.size; j++) {
+                    if (derivative.isEqual(states.states[j])) {
                         transitions.add(new Delta(index, this.alphabet[i], j));
-                        // System.out.println(index + " " + this.alphabet[i] + " " + j);
+//                         System.out.println(index + " " + this.alphabet[i] + " " + j);
                         found = true;
                         break;
                     }
                 }
-                if(!found) {
-                    transitions.add(new Delta(index, this.alphabet[i], this.states.size));
+                if (!found) {
+                    transitions.add(new Delta(index, this.alphabet[i],
+                                              this.states.size));
                     // System.out.println(index + " " +  this.alphabet[i] + " " + this.states.size);
                     states.add(derivative);
                     noNew = false;
                 }
             }
-            if(index == this.states.size - 1) break;
+            if (index == this.states.size - 1) {
+                break;
+            }
             index++;
         }
     }
@@ -126,20 +131,18 @@ public class DFA {
         // or2.right = ca;
         // plus.left = or2;
         // plus.right = or;
-
         dfa.createDFA(star);
-        for(int i = 0; i < dfa.transitions.size; i++) {
-            System.out.println(dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
+        for (int i = 0; i < dfa.transitions.size; i++) {
+            System.out.println(
+                    dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
 
-        System.out.println(dfa.states.states[1].op);
-        System.out.println(dfa.states.states[1].left.right.value);
+//        System.out.println(dfa.states.states[1].op);
+//        System.out.println(dfa.states.states[1].left.value);
 
         // System.out.println(dfa.states.states[0].op);
 //        System.out.println(dfa.states.states[3].left);
-
 //        System.out.println("new DFA");
-
 //        DFA dfa2 = new DFA();
 //
 //        ExpTree a = new ExpTree("a");

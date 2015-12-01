@@ -1,4 +1,4 @@
-package phase3;
+package phase4;
 
 public class ExpTree {
     public ExpTree left;
@@ -20,35 +20,41 @@ public class ExpTree {
         this.right = null;
     }
 
-    public boolean isEqual( ExpTree otherTree ) {
+    public boolean isEqual(ExpTree otherTree) {
 //        if(this.right == null && otherTree.right != null) return false;
 //        if(this.left == null && otherTree.left != null) return false;
 //        if(this.right != null && otherTree.right == null) return false;
 //        if(this.left != null && otherTree.right == null) return false;
 //        if(this.left == null && otherTree.left == null && this.right == null && otherTree.right == null && this.value == otherTree.value);
 //        System.out.println(this.op + this.value + otherTree.op + otherTree.value);
-        if (this.op == otherTree.op && this.value==otherTree.value) {
-            if(this.left != null && otherTree.left != null && this.right != null && otherTree.right != null) {
-                return this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right);
+        boolean equalVals = true;
+        if(this.value != null && otherTree.value != null && !this.value.equals(otherTree.value)) {
+            equalVals = false;
+        }
+        if (this.op == otherTree.op && equalVals) {
+            if (this.op == Operation.STAR) {
+                return this.right.isEqual(otherTree.right);
             }
-            else {
+            else if (this.left != null && otherTree.left != null && this.right != null && otherTree.right != null) {
+                return this.left.isEqual(otherTree.left) && this.right.isEqual(
+                        otherTree.right);
+            } else {
                 boolean left;
                 boolean right;
-                if(this.left == null || otherTree.left == null) {
+                if (this.left == null || otherTree.left == null) {
                     left = this.left == otherTree.left;
-                }
-                else {
+                } else {
                     left = this.left.isEqual(otherTree.left);
                 }
-                if(this.right == null || otherTree.right == null) {
+                if (this.right == null || otherTree.right == null) {
                     right = this.right == otherTree.right;
-                }
-                else {
+                } else {
                     right = this.right.isEqual(otherTree.right);
                 }
                 return left && right;
             }
         }
+//        System.out.println("returning false");
         return false;
 //        if (this.op==otherTree.op && this.value==otherTree.value &&
 //                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {
@@ -57,7 +63,7 @@ public class ExpTree {
     }
 
     public enum Operation {
-        CONCAT, STAR, UNION, INTERSECT, NOT
+        CONCAT, STAR, UNION, INTERSECT
     }
 
     public static void main(String[] args) {
