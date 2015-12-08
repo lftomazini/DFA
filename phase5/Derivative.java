@@ -158,9 +158,55 @@ public class Derivative {
 
         // INTERSECT simplifications
         if (op == Operation.INTERSECT) {
-            // r and r = r
-            if (left.isEqual(right)) {
-                return right;
+            // r+(s+t) = (r+s)+t (put intersect tree on left)
+            if(right.op != null && right.op == Operation.INTERSECT) {
+                ExpTree newTree = new ExpTree(Operation.INTERSECT);
+                newTree.right = right.right;
+                ExpTree newLeft = new ExpTree(Operation.INTERSECT);
+                newLeft.right = right.left;
+                newLeft.left = left;
+                newTree.left = newLeft;
+                // checking for identical values in our newly made tree
+                ExpTree current = newTree;
+                ArrayList<ExpTree> list = new ArrayList<ExpTree>();
+                while(current.op == Operation.INTERSECT) {
+                    list.add(current.right);
+                    current = current.left;
+                }
+                list.add(current);
+                ArrayList<ExpTree> revised = new ArrayList<ExpTree>();
+                
+                for(int i = 0; i < list.size(); i++) {
+                    ExpTree iTree = list.get(i);
+                    boolean unique = true;
+                    for(int j = 0; j < revised.size() ; j++) {
+                        if(iTree.isEqual(revised.get(j))) {
+                            unique = false;
+                            break;
+                        }
+                    }
+                    if(unique) {
+                        revised.add(iTree);
+                    }
+                }
+                if(revised.size() == 1) {
+                    simp = revised.get(0);
+                }
+                else {
+                    ExpTree returnTree = new ExpTree(Operation.INTERSECT);
+                    current = returnTree;
+                    for(int i = 2; i < revised.size() ; i++) {
+                        current.right = revised.get(i);
+                        current.left = new ExpTree(Operation.INTERSECT);
+                        current = current.left;
+                    }
+                    current.left = revised.get(0);
+                    current.right = revised.get(1);
+                    newTree = returnTree;
+                }
+                simp = newTree;
+                left = simp.left;
+                right = simp.right;
             }
             // r and s = s and r (put bigger tree on left)
             int ldepth = depth(left);
@@ -169,15 +215,19 @@ public class Derivative {
                 simp.left = right;
                 simp.right = left;
             }
+            // r and r = r
+            if (left.isEqual(right)) {
+                simp = right;
+            }        
             // @ and r || r and @ = @
-            if (left.value != null && left.value.equals("@")) {
-                return new ExpTree("@");
+            else if (left.value != null && left.value.equals("@")) {
+                simp = new ExpTree("@");
             } else if (right.value != null && right.value.equals("@")) {
-                return new ExpTree("@");
-            } // Simplified
-            else {
-                return simp;
-            }
+                simp = new ExpTree("@");
+            } 
+            // Simplified
+            return simp;
+            
         } // UNION simplifications
         else if (op == Operation.UNION) {
             // r+(s+t) = (r+s)+t (put union tree on left)
@@ -240,8 +290,6 @@ public class Derivative {
             // r+r = r
             if (left.isEqual(right)) {
                 simp = right;
-                left = simp.left;
-                right = simp.right;
             }
             // @+r || r+@ = r
             else if (left.value != null && left.value.equals("@")) {
