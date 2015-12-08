@@ -180,23 +180,6 @@ public class Derivative {
             }
         } // UNION simplifications
         else if (op == Operation.UNION) {
-            // r+r = r
-            if (left.isEqual(right)) {
-                return right;
-            }
-            // r+s = s+r (put bigger tree on left)
-            int ldepth = depth(left);
-            int rdepth = depth(right);
-            if (rdepth > ldepth) {
-                simp.left = right;
-                simp.right = left;
-            }
-            // @+r || r+@ = r
-            if (left.value != null && left.value.equals("@")) {
-                return right;
-            } else if (right.value != null && right.value.equals("@")) {
-                return left;
-            }
             // r+(s+t) = (r+s)+t (put union tree on left)
             if(right.op != null && right.op == Operation.UNION) {
                 ExpTree newTree = new ExpTree(Operation.UNION);
@@ -208,7 +191,7 @@ public class Derivative {
                 // checking for identical values in our newly made tree
                 ExpTree current = newTree;
                 ArrayList<ExpTree> list = new ArrayList<ExpTree>();
-                while(current.op != null) {
+                while(current.op == Operation.UNION) {
                     list.add(current.right);
                     current = current.left;
                 }
@@ -229,7 +212,7 @@ public class Derivative {
                     }
                 }
                 if(revised.size() == 1) {
-                    return revised.get(0);
+                    simp = revised.get(0);
                 }
                 else {
                     ExpTree returnTree = new ExpTree(Operation.UNION);
@@ -243,8 +226,30 @@ public class Derivative {
                     current.right = revised.get(1);
                     newTree = returnTree;
                 }
-                return newTree;
+                simp = newTree;
+                left = simp.left;
+                right = simp.right;
             }
+            // r+s = s+r (put bigger tree on left)
+            int ldepth = depth(left);
+            int rdepth = depth(right);
+            if (rdepth > ldepth) {
+                simp.left = right;
+                simp.right = left;
+            }
+            // r+r = r
+            if (left.isEqual(right)) {
+                simp = right;
+                left = simp.left;
+                right = simp.right;
+            }
+            // @+r || r+@ = r
+            else if (left.value != null && left.value.equals("@")) {
+                simp = right;
+            } else if (right.value != null && right.value.equals("@")) {
+                simp = left;
+            }
+            
             // Simplified
             return simp;
         } // CONCAT simplifications

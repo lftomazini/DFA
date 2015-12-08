@@ -118,48 +118,21 @@ public class DFA {
         DFA dfa = new DFA();
 
         ExpTree a = new ExpTree("a");
-        ExpTree aa = new ExpTree("ab");
+        ExpTree aa = new ExpTree("aa");
         ExpTree union = new ExpTree(Operation.UNION);
         ExpTree star = new ExpTree(Operation.STAR);
         union.left = a;
         union.right = aa;
         star.right = union;
 
-        // or.left = ab;
-        // or.right = ac;
-        // or2.left = ba;
-        // or2.right = ca;
-        // plus.left = or2;
-        // plus.right = or;
         dfa.createDFA(star);
         for (int i = 0; i < dfa.transitions.size; i++) {
             System.out.println(
                     dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
         }
-
-//        System.out.println(dfa.states.states[1].op);
-//        System.out.println(dfa.states.states[1].left.value);
-
-        // System.out.println(dfa.states.states[0].op);
-//        System.out.println(dfa.states.states[3].left);
-//        System.out.println("new DFA");
-//        DFA dfa2 = new DFA();
-//
-//        ExpTree a = new ExpTree("a");
-//        ExpTree b = new ExpTree("b");
-//        ExpTree c = new ExpTree("c");
-//        ExpTree star1 = new ExpTree(Operation.STAR);
-//        ExpTree star2 = new ExpTree(Operation.STAR);
-//        ExpTree union = new ExpTree(Operation.UNION);
-//        ExpTree concat = new ExpTree(Operation.CONCAT);
-//        union.left = b;
-//        union.right = c;
-//        star2.right = union;
-//        star1.right = a;
-//        concat.left = star1;
-//        concat.right = star2;
-//
-//        dfa2.createDFA(concat);
+        for (int i = 0; i < dfa.states.size; i++) {
+            System.out.println(dfa.states.states[i].print());
+        }
     }
 
 }

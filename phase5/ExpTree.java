@@ -64,6 +64,9 @@ public class ExpTree {
     
     public String print() {
         String ans = "";
+        if(this.value != null) {
+            return this.value;
+        }
         if(this.op != null) {
             ans = ans + this.op + "(";
         }
