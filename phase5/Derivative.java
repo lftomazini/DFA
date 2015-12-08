@@ -302,22 +302,31 @@ public class Derivative {
             return simp;
         } // CONCAT simplifications
         else if (op == Operation.CONCAT) {
+            // r(st) = (rs)t (put concat tree on left)
+            if(right.op != null && right.op == Operation.CONCAT) {
+                ExpTree newTree = new ExpTree(Operation.CONCAT);
+                newTree.right = right.right;
+                ExpTree newLeft = new ExpTree(Operation.CONCAT);
+                newLeft.right = right.left;
+                newLeft.left = left;
+                newTree.left = newLeft;
+                simp = newTree;
+            }
             // @r = @ || r@ = @
             if (left.value != null && left.value.equals("@")) {
-                return new ExpTree("@");
+                simp = new ExpTree("@");
             } else if (right.value != null && right.value.equals("@")) {
-                return new ExpTree("@");
+                simp = new ExpTree("@");
             } // &r = r || r& = r
             else if (left.value != null && left.value.equals("&")) {
-                return right;
+                simp = right;
             } else if (right.value != null && right.value.equals("&")) {
-                return left;
+                simp = left;
             } else if (left.value != null && right.value != null) {
-                return new ExpTree(left.value + right.value);
+                simp = new ExpTree(left.value + right.value);
             }
-            else {
-                return simp;
-            }
+            return simp;
+          
         } else {
             System.out.println("Error in Derivative.simplify");
             return null;
