@@ -9,55 +9,49 @@ import phase5.ExpTree.Operation;
 public class Tester {
     public static int BASE;
     public static final int MAX_POWER = 6;
-    public static final int DEPTH = 7;
+    public static final int SIZE = 5;
     public static final String ALPHABET = "abc";
 
-    public ExpTree randomRE(int depth, int prob) {
+    public ExpTree randomRE(int size) {
         RandStrGen randString = new RandStrGen(ALPHABET);
         Random rand = new Random();
-
-        int leafProb = rand.nextInt(prob) + 1;
-        if (leafProb > depth) {
-            String val = randString.genString(rand.nextInt(3) + 1);
-            return new ExpTree(val);
-        } else {
-            Operation op;
-            int r = rand.nextInt(Operation.values().length);
-            switch (r) {
-                case 0:
-                    op = Operation.CONCAT;
-                    break;
-                case 1:
-                    op = Operation.UNION;
-                    break;
-                case 2:
-                    op = Operation.STAR;
-                    break;
-                case 3:
-                    op = Operation.INTERSECT;
-                    break;
-                default:
-                    op = null;
-            }
-
-            ExpTree tree = new ExpTree(op);
-            tree.right = randomRE(depth - 1, prob);
-            if (op != Operation.STAR) {
-                tree.left = randomRE(depth - 1, prob);
-            }
-	    /*
-	    if (op != Operation.STAR) {
-                tree.left = randomRE(size - 1, prob);
-            }else{
-		int i = rand.nextInt(size);
-		tree.left = randomRE(i, prob);
-		tree.right = randomRE(size -i, prob);
-		}*/
-
-	    
-            return tree;
-
+        
+        if(size == 1 || size == 2) {
+            String rs = randString.genString(rand.nextInt(3) + 1);
+            return new ExpTree(rs);
         }
+        
+        Operation op;
+        int r = rand.nextInt(Operation.values().length);
+        switch (r) {
+            case 0:
+                op = Operation.CONCAT;
+                break;
+            case 1:
+                op = Operation.UNION;
+                break;
+            case 2:
+                op = Operation.STAR;
+                break;
+            case 3:
+                op = Operation.INTERSECT;
+                break;
+            default:
+                op = null;
+        }
+        ExpTree tree = new ExpTree(op);
+        if(op == Operation.STAR) {
+            tree.right = randomRE(size - 1);
+        }
+        else {
+            int lsize = rand.nextInt(size - 2) + 1;
+            if(lsize == 2) lsize = 1;
+            else if(lsize == size - 3) lsize = size - 2;
+            int rsize = size - lsize - 1;
+            tree.left = randomRE(lsize);
+            tree.right = randomRE(rsize);
+        }
+        return tree;
     }
 
     public static void assign(ArrayList<String> randStrings) {
@@ -105,15 +99,11 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
-        System.out.println("Generating tree with alphabet \"" + ALPHABET + "\" of depth " + DEPTH + "...");
-        ExpTree randTree = t.randomRE(DEPTH, DEPTH);
+        System.out.println("Generating tree with alphabet \"" + ALPHABET + "\" of size " + SIZE + "...");
+        ExpTree randTree = t.randomRE(SIZE);
         System.out.println(t.printRE(randTree));
         DFA dfa = new DFA();
         dfa.createDFA(randTree);
-        // for (int i = 0; i < dfa.transitions.size; i++) {
-        //     System.out.println(
-        //             dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
-        // }
 
         String alphabet = "abc";
         RandStrGen rsg = new RandStrGen(alphabet);
@@ -144,6 +134,6 @@ public class Tester {
         System.out.println("---------------");
         System.out.println("Number of states (Q):                            " + ourdfa.states.size);
         System.out.println("Number of transitions (Q x |Sigma|):             " + ourdfa.transitions.size);
-        System.out.println("Steps to create DFA (Q^2 x |Sigma| x 2^(depth)): " + (int)(Math.pow(ourdfa.states.size, 2) * ourdfa.transitions.size * Math.pow(2, DEPTH)));
+        System.out.println("Steps to create DFA (Q^2 x |Sigma| x 2^(size)): " + (int)(Math.pow(ourdfa.states.size, 2) * ourdfa.transitions.size * Math.pow(2, SIZE)));
     }
 }
