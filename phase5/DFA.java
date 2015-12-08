@@ -1,7 +1,7 @@
-package phase4;
+package phase5;
 
-import phase4.ExpTree.Operation;
-// javac phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
+import phase5.ExpTree.Operation;
+// javac phase5/DFA.java phase5/ExpTree.java phase5/Alphabet.java
 
 class Delta {
     public int current;

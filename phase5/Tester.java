@@ -1,11 +1,11 @@
-package phase4;
+package phase5;
 
 import java.util.ArrayList;
 import java.util.Random;
 // import java.util.Math;
-import phase4.ExpTree.Operation;
+import phase5.ExpTree.Operation;
 
-// javac phase4/Tester.java phase4/REMatcher.java phase4/DFA.java phase4/ExpTree.java phase4/Alphabet.java
+// javac phase5/Tester.java phase5/REMatcher.java phase5/DFA.java phase5/ExpTree.java phase5/Alphabet.java
 public class Tester {
     public static int BASE;
     public static final int MAX_POWER = 6;

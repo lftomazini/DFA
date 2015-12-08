@@ -1,8 +1,8 @@
-package phase4;
+package phase5;
 
-import phase4.ExpTree.Operation;
+import phase5.ExpTree.Operation;
 
-// javac phase3/REMatcher.java phase3/DFA.java phase3/ExpTree.java phase3/Alphabet.java
+// javac phase5/REMatcher.java phase5/DFA.java phase5/ExpTree.java phase5/Alphabet.java
 public class REMatcher {
 
     public ExpTree re;

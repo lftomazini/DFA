@@ -1,4 +1,4 @@
-package phase4;
+package phase5;
 
 public class ExpTree {
     public ExpTree left;
@@ -60,6 +60,27 @@ public class ExpTree {
 //                this.left.isEqual(otherTree.left) && this.right.isEqual(otherTree.right)) {
 //            return true;
 //        } else return false;
+    }
+    
+    public String print() {
+        String ans = "";
+        if(this.op != null) {
+            ans = ans + this.op + "(";
+        }
+        if (this.op != Operation.STAR) {
+            if (this.left.value != null) {
+                ans = ans + this.left.value + ",";
+            } else {
+                ans = ans + this.left.print() + ",";
+            }
+        }
+        if (this.right.value != null) {
+            ans = ans + this.right.value;
+        } else {
+            ans = ans + this.right.print();
+        }
+        ans = ans + ")";
+        return ans;
     }
 
     public enum Operation {

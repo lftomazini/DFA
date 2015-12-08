@@ -1,8 +1,9 @@
-package phase4;
+package phase5;
 
-import phase4.ExpTree.Operation;
+import phase5.ExpTree.Operation;
+import java.util.*;
 
-// javac phase4/Derivative.java phase4/ExpTree.java
+// javac phase5/Derivative.java phase5/ExpTree.java
 public class Derivative {
     public ExpTree t;
 
@@ -196,6 +197,54 @@ public class Derivative {
             } else if (right.value != null && right.value.equals("@")) {
                 return left;
             }
+            // r+(s+t) = (r+s)+t (put union tree on left)
+            if(right.op != null && right.op == Operation.UNION) {
+                ExpTree newTree = new ExpTree(Operation.UNION);
+                newTree.right = right.right;
+                ExpTree newLeft = new ExpTree(Operation.UNION);
+                newLeft.right = right.left;
+                newLeft.left = left;
+                newTree.left = newLeft;
+                // checking for identical values in our newly made tree
+                ExpTree current = newTree;
+                ArrayList<ExpTree> list = new ArrayList<ExpTree>();
+                while(current.op != null) {
+                    list.add(current.right);
+                    current = current.left;
+                }
+                list.add(current);
+                ArrayList<ExpTree> revised = new ArrayList<ExpTree>();
+                
+                for(int i = 0; i < list.size(); i++) {
+                    ExpTree iTree = list.get(i);
+                    boolean unique = true;
+                    for(int j = 0; j < revised.size() ; j++) {
+                        if(iTree.isEqual(revised.get(j))) {
+                            unique = false;
+                            break;
+                        }
+                    }
+                    if(unique) {
+                        revised.add(iTree);
+                    }
+                }
+                if(revised.size() == 1) {
+                    return revised.get(0);
+                }
+                else {
+                    ExpTree returnTree = new ExpTree(Operation.UNION);
+                    current = returnTree;
+                    for(int i = 2; i < revised.size() ; i++) {
+                        current.right = revised.get(i);
+                        current.left = new ExpTree(Operation.UNION);
+                        current = current.left;
+                    }
+                    current.left = revised.get(0);
+                    current.right = revised.get(1);
+                    newTree = returnTree;
+                }
+                return newTree;
+            }
             // Simplified
             return simp;
         } // CONCAT simplifications
@@ -212,22 +261,7 @@ public class Derivative {
                 return left;
             } else if (left.value != null && right.value != null) {
                 return new ExpTree(left.value + right.value);
-            } // Weird Case
-            //            else if(left.op != null && right.op != null &&
-            //                    left.op == Operation.UNION && right.op == Operation.STAR &&
-            //                    right.right.op != null && right.right.op == Operation.UNION &&
-            //                    left.left.value != null && left.right.value != null &&
-            //                    right.right.left.value != null && right.right.right.value != null) {
-            //                String leftVal = left.left.value;
-            //                String rightVal = left.right.value;
-            //                if(leftVal.equals("&") || right.right.left.value.indexOf(leftVal) == 0 ||
-            //                   right.right.right.value.indexOf(leftVal) == 0 || right.right.left.value.indexOf(rightVal) == 0 ||
-            //                   right.right.right.value.indexOf(rightVal) == 0 || rightVal.equals("&")) {
-            //                    return right;
-            //                }
-            //                return simp;
-            //            }
-            // Simplified
+            }
             else {
                 return simp;
             }
@@ -276,23 +310,18 @@ public class Derivative {
 ////        ExpTree deriv = d.getDerivative('b', union);
 ////        System.out.println(deriv.right.op);
 
-        ExpTree a = new ExpTree("a");
-        ExpTree aa = new ExpTree("ab");
-        ExpTree union = new ExpTree(Operation.UNION);
-        ExpTree star = new ExpTree(Operation.STAR);
-        union.left = a;
-        union.right = aa;
-        star.right = union;
-        ExpTree deriv = d.getDerivative('a', star);
-        System.out.println("Deriv 2");
-        ExpTree deriv2 = d.getDerivative('a', deriv);
-        System.out.println(deriv2.right.right.right.right.value);
-
-        ExpTree u = new ExpTree(Operation.UNION);
-        u.left = new ExpTree("&");
-        u.right = new ExpTree("a");
-        ExpTree der = d.getDerivative('a', u);
-//        System.out.println(der.value);
+        ExpTree u1 = new ExpTree(Operation.UNION);
+        ExpTree u2 = new ExpTree(Operation.UNION);
+        ExpTree u3 = new ExpTree(Operation.UNION);
+        u2.left = new ExpTree("a");
+        u2.right = new ExpTree("b");
+        u3.left = new ExpTree("a");
+        u3.right = new ExpTree("d");
+        u1.left = u2;
+        u1.right = u3;
+        
+        ExpTree simp = d.simplify(u1);
+        System.out.println(simp.print());
 
     }
 }
