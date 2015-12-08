@@ -8,7 +8,7 @@ public class Alphabet {
     private char[] values;
     public int size;
     private int curIndex;
-
+    private int startChars;
     // Constructor to produce Alphabet object containing 0-9, a-z, A-Z
     public Alphabet() {
 	
@@ -25,6 +25,7 @@ public class Alphabet {
 	    curIndex++;
 	}
 
+        this.startChars = curIndex;
 	// lowercase characters
 	for (int j=97; j<123; j++) {
 	    this.values[curIndex] = (char)j;
@@ -47,6 +48,10 @@ public class Alphabet {
 	return this.values;
     }
 
+    // FINISH MEEEEEEEEEEEE -----------  Return only char values of alphabet
+    public char[] getChars() {
+        return this.values;
+    }
     public static void main(String[] args) {
 	
 	Alphabet alph = new Alphabet();

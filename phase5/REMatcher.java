@@ -14,6 +14,58 @@ public class REMatcher {
         this.dfa.createDFA(regExp);
     }
 
+    // Converts the given ExpTree to its equivalent String RE
+    public String convert(ExpTree t) {
+        
+        // Base case: leaf node, return value
+        if (t.op==null) {
+            return (String)t.value;
+        }
+        // Rec. case: op node
+        else {
+   
+            if (t.op==Operation.STAR) {
+                if ( t.right.op==null) { // Child is a leaf node
+                    return this.convert(t.right) + "*";
+                } else { 
+                    return "(" + this.convert(t.right) + ")*";
+                }
+            }
+            
+            else if (t.op==Operation.UNION || t.op==Operation.INTERSECT) {
+                String left, right;
+                if (t.left.op==null || t.left.op==Operation.STAR) {
+                    left = this.convert(t.left);
+                } else {
+                    left = "(" + this.convert(t.left) + ")";
+                }
+                
+                if (t.right.op==null || t.right.op==Operation.STAR) {
+                    right = this.convert(t.right);
+                } else {
+                    right = "(" + this.convert(t.right) + ")";
+                }
+                return left + "|" + right;
+            }
+            
+            else {  // Op is concat
+                String text = "";
+                if (t.left.op==null || t.left.op==Operation.STAR || t.left.op==Operation.CONCAT) {
+                    text += this.convert(t.left);
+                } else {
+                    text += "(" + this.convert(t.left) + ")";
+                }
+                
+                if (t.right.op==null || t.right.op==Operation.STAR || t.right.op==Operation.CONCAT) {
+                    text += this.convert(t.right);
+                } else {
+                    text += "(" + this.convert(t.right) + ")";
+                }
+                return text;
+            }
+        }
+    }
+    
     public boolean isMatch(String s) {
         String currentString = s;
         int currentState = 0;
