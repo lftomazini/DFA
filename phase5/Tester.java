@@ -53,55 +53,6 @@ public class Tester {
         }
         return tree;
     }
-    
-//    public ExpTree randomRE(int depth, int prob) {
-//        RandStrGen randString = new RandStrGen(ALPHABET);
-//        Random rand = new Random();
-//
-//        int leafProb = rand.nextInt(prob) + 1;
-//        if (leafProb > depth) {
-//            String val = randString.genString(rand.nextInt(3) + 1);
-//            return new ExpTree(val);
-//        } else {
-//            Operation op;
-//            int r = rand.nextInt(Operation.values().length);
-//            switch (r) {
-//                case 0:
-//                    op = Operation.CONCAT;
-//                    break;
-//                case 1:
-//                    op = Operation.UNION;
-//                    break;
-//                case 2:
-//                    op = Operation.STAR;
-//                    break;
-//                case 3:
-//                    op = Operation.INTERSECT;
-//                    break;
-//                default:
-//                    op = null;
-//            }
-//
-//            ExpTree tree = new ExpTree(op);
-//            tree.right = randomRE(depth - 1, prob);
-//            if (op != Operation.STAR) {
-//                tree.left = randomRE(depth - 1, prob);
-//            }
-            
-	    /*
-	    if (op != Operation.STAR) {
-                tree.left = randomRE(size - 1, prob);
-            }else{
-		int i = rand.nextInt(size);
-		tree.left = randomRE(i, prob);
-		tree.right = randomRE(size -i, prob);
-		}*/
-
-//	    
-//            return tree;
-//
-//        }
-//    }
 
     public static void assign(ArrayList<String> randStrings) {
         int sum = 0;
@@ -153,10 +104,6 @@ public class Tester {
         System.out.println(t.printRE(randTree));
         DFA dfa = new DFA();
         dfa.createDFA(randTree);
-        // for (int i = 0; i < dfa.transitions.size; i++) {
-        //     System.out.println(
-        //             dfa.transitions.trans[i].current + " " + dfa.transitions.trans[i].letter + " " + dfa.transitions.trans[i].next);
-        // }
 
         String alphabet = "abc";
         RandStrGen rsg = new RandStrGen(alphabet);
