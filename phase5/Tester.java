@@ -2,15 +2,12 @@ package phase5;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 // import java.util.Math;
 import phase5.ExpTree.Operation;
 
 // javac phase5/Tester.java phase5/REMatcher.java phase5/DFA.java phase5/ExpTree.java phase5/Alphabet.java
-// #########################################################################################################################
-// #########################################################################################################################
-// ########################### BUG: randomRE generating ExpTrees of size one less than given size ##########################
-// #########################################################################################################################
-// #########################################################################################################################
 public class Tester {
     public static int BASE;
     public static final int MAX_POWER = 6;
@@ -101,9 +98,88 @@ public class Tester {
         return ans;
 
     }
+    
+    // Returns true if the given ExpTree has any star heights > 1 (    eg. ((a*)*)   ) 
+    public static boolean hasStarStack(ExpTree t) {
+        
+        if (t.op==null) { // Leaf node
+            return false;
+        
+        } else { // Op node
+            
+            if (t.op==Operation.STAR) { // Op is STAR
+                
+                if (t.right.op==Operation.STAR) { // And right child is star -- found a star stack
+                    return true;
+                
+                } else { // Right child not star -- recurse
+                    return (hasStarStack(t.right));
+                }
+            
+            } else { // Op is UNION/INTERSECT/CONCAT
+                return (hasStarStack(t.left) || hasStarStack(t.right));
+            }
+        }
+        
+    }
+    
+    // Run hasStarStack on the list of ExpTrees, return list of ExpTrees containing star stacks
+    public ArrayList<String> findStarStacks(ExpTree[] trees) {
+        ArrayList<String> found = new ArrayList<>();
+        for (ExpTree t: trees) {
+            if (hasStarStack(t)) {
+                found.add(t.convert(t));
+            }
+        }
+        return found;
+    }
+    
+    
+    public boolean testCompleteness() {
+        int numToGen = 50;
+        int strLen = 10;
+        String[] randStrs;
+        RandStrGen randString = new RandStrGen(ALPHABET);
+        randStrs = randString.genStrings(numToGen, strLen);
+        System.out.println("Finished generating random strings.");
+        
+        Derivative d = new Derivative();
+        ExpTree[] trees = new ExpTree[50]; // Empty array to hold 50 ExpTrees
+        
+        for (int i=0; i<50; i++) {                 // Fill each slot in trees by first generating a randomRE of size 10,
+            trees[i] = d.simplify(randomRE(10));   // then simplifying it and adding to the array
+        }
+        ArrayList<String> found = findStarStacks(trees);  // The final array containing the simplified ExpTrees that had star stacks
+        for ( String item: found ) {
+            System.out.println( item );
+        }
+        
+        /*
+        for ( int i=0; i<numToGen; i++ ) {
+            ExpTree tree = randomRE(strLen);
+            Derivative d = new Derivative();
+            ExpTree simp = d.simplify(tree);
+            String treeStr = simp.convert(simp);
+            Pattern p = Pattern.compile(treeStr);
+            Matcher m = p.matcher(randStrs[i]);
+            REMatcher matcher = new REMatcher(simp);
+            String format = "%" + ((int) Math.log10(numToGen) + 2) + "d%" + (int) (strLen + 4) + "s";
+            String outStr = String.format(format, i + 1, randStrs[i]);
+            System.out.println(outStr + ", RE: " + treeStr );
+            if (m.matches() && !matcher.isMatch(randStrs[i]) ) {
+                return false;
+            } else if ( !m.matches() && matcher.isMatch(randStrs[i]) ) {
+                return false;
+            }
+        }*/
+            
+        return true;
+        
+    } 
 
     public static void main(String[] args) {
         Tester t = new Tester();
+        /*
         System.out.println("Generating tree with alphabet \"" + ALPHABET + "\" of size " + SIZE + "...");
         ExpTree randTree = t.randomRE(SIZE);
         System.out.println(t.printRE(randTree));
@@ -140,5 +216,7 @@ public class Tester {
         System.out.println("Number of states (Q):                            " + ourdfa.states.size);
         System.out.println("Number of transitions (Q x |Sigma|):             " + ourdfa.transitions.size);
         System.out.println("Steps to create DFA (Q^2 x |Sigma| x 2^(size)): " + (int)(Math.pow(ourdfa.states.size, 2) * ourdfa.transitions.size * Math.pow(2, SIZE)));
+    */
+        System.out.println(t.testCompleteness());
     }
 }
