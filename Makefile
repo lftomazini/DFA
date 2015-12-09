@@ -1,10 +1,10 @@
 JAVAC = javac
 JAVACFLAGS = 
-SRC= phase4/Tester.java \
-	phase4/REMatcher.java \
-	phase4/DFA.java \
-	phase4/ExpTree.java \
-	phase4/Alphabet.java
+SRC= phase5/Tester.java \
+	phase5/REMatcher.java \
+	phase5/DFA.java \
+	phase5/ExpTree.java \
+	phase5/Alphabet.java
 CLS= $(SRC:.java=.class)
 
 all: $(CLS)
@@ -14,4 +14,4 @@ all: $(CLS)
 	$(JAVAC) $(JAVACFLAGS) $<
 
 clean: 
-	rm -f phase4/*.class
+	rm -f phase5/*.class
