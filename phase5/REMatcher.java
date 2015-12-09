@@ -35,17 +35,23 @@ public class REMatcher {
             else if (t.op==Operation.UNION || t.op==Operation.INTERSECT) {
                 String left, right;
                 if (t.left.op==null || t.left.op==Operation.STAR) {
-                    left = this.convert(t.left);
+                    left = "(" + this.convert(t.left);
                 } else {
-                    left = "(" + this.convert(t.left) + ")";
+                    left = "(" + this.convert(t.left);
                 }
                 
                 if (t.right.op==null || t.right.op==Operation.STAR) {
-                    right = this.convert(t.right);
+                    right = this.convert(t.right) + ")";
                 } else {
-                    right = "(" + this.convert(t.right) + ")";
+                    right = this.convert(t.right) + ")";
                 }
-                return left + "|" + right;
+                String op_text;
+                if (t.op==Operation.UNION) {
+                    op_text = "|";
+                } else {
+                    op_text = "&&";
+                }
+                return left + op_text + right;
             }
             
             else {  // Op is concat
@@ -102,6 +108,15 @@ public class REMatcher {
 
         REMatcher l = new REMatcher(star);
         System.out.println(l.isMatch("aa"));
+        
+        Tester t = new Tester();
+        for ( int i=0; i<10; i++ ) {
+            ExpTree tree = t.randomRE(6);
+            System.out.println(tree.print());
+            REMatcher r = new REMatcher(tree);
+            System.out.println( r.convert(r.re) );
+        }
+        
     }
 
 }
