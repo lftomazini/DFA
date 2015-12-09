@@ -23,53 +23,62 @@ public class REMatcher {
         }
         // Rec. case: op node
         else {
-   
+            String cur_op = "";
+            boolean leftParens = false; 
+            boolean rightParens = false;
+            
+            // Current node's op is...
             if (t.op==Operation.STAR) {
-                if ( t.right.op==null) { // Child is a leaf node
+                if (t.right.op==null && t.right.value.length()==1) { // leaf node w/ value only one char
                     return this.convert(t.right) + "*";
-                } else { 
-                    return "(" + this.convert(t.right) + ")*";
+                } else {
+                    return "(" + this.convert(t.right) + ")*"; 
+                }
+            } else if (t.op==Operation.UNION) {
+                cur_op = "|";
+            } else if (t.op==Operation.INTERSECT) {
+                cur_op = "&&";
+            }
+            
+            if (t.left.op!=null) {
+                // Left child's op is...
+                switch(t.left.op) {
+                    case UNION:
+                        leftParens = true;
+                        break;
+                    case INTERSECT:
+                        leftParens = true;
+                        break;
                 }
             }
             
-            else if (t.op==Operation.UNION || t.op==Operation.INTERSECT) {
-                String left, right;
-                if (t.left.op==null || t.left.op==Operation.STAR) {
-                    left = "(" + this.convert(t.left);
-                } else {
-                    left = "(" + this.convert(t.left);
+            if (t.right.op!=null) {
+                // Right child's op is...
+                switch(t.right.op) {
+                    case UNION:
+                        rightParens = true;
+                        break;
+                    case INTERSECT:
+                        rightParens = true;
+                        break;
                 }
-                
-                if (t.right.op==null || t.right.op==Operation.STAR) {
-                    right = this.convert(t.right) + ")";
-                } else {
-                    right = this.convert(t.right) + ")";
-                }
-                String op_text;
-                if (t.op==Operation.UNION) {
-                    op_text = "|";
-                } else {
-                    op_text = "&&";
-                }
-                return left + op_text + right;
             }
             
-            else {  // Op is concat
-                String text = "";
-                if (t.left.op==null || t.left.op==Operation.STAR || t.left.op==Operation.CONCAT) {
-                    text += this.convert(t.left);
-                } else {
-                    text += "(" + this.convert(t.left) + ")";
-                }
-                
-                if (t.right.op==null || t.right.op==Operation.STAR || t.right.op==Operation.CONCAT) {
-                    text += this.convert(t.right);
-                } else {
-                    text += "(" + this.convert(t.right) + ")";
-                }
-                return text;
+            String text;
+            if (leftParens) {
+                text = "(" + this.convert(t.left) + ")";
+            } else {
+                text = this.convert(t.left);
             }
-        }
+            text += cur_op;
+            if (rightParens) {
+                text += "(" + this.convert(t.right) + ")";
+            } else {
+                text += this.convert(t.right);
+            }
+            
+            return text;
+        }     
     }
     
     public boolean isMatch(String s) {
@@ -110,8 +119,8 @@ public class REMatcher {
         System.out.println(l.isMatch("aa"));
         
         Tester t = new Tester();
-        for ( int i=0; i<10; i++ ) {
-            ExpTree tree = t.randomRE(6);
+        for ( int i=0; i<3; i++ ) {
+            ExpTree tree = t.randomRE(10);
             System.out.println(tree.print());
             REMatcher r = new REMatcher(tree);
             System.out.println( r.convert(r.re) );
