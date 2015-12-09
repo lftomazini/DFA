@@ -16,6 +16,8 @@ public class Derivative {
 
     }
 
+    // Returns an ExpTree representing the derivative of the input expTree by
+    // the character c. Derivatives calc'd using rules from Owens et al. 3.1
     public ExpTree getDerivative(char c, ExpTree expTree) {
         ExpTree tree = simplify(expTree);
         // Leaf -> Contains a string
@@ -119,7 +121,7 @@ public class Derivative {
         }
     }
 
-    // Simplifies a tree to it's most basic tree using the rules from 4.1
+    // Simplifies a tree to its most basic tree using the rules from 4.1
     public ExpTree simplify(ExpTree t) {
         if (t.op == null) {
             return t;
@@ -333,6 +335,8 @@ public class Derivative {
         }
     }
 
+    // Helper function; returns "epsilon" (&) if t is nullable, "null set" (@)
+    // otherwise
     public String v2(ExpTree t) {
         if (v(t)) {
             return "&";
@@ -341,6 +345,7 @@ public class Derivative {
         }
     }
 
+    // Returns true if t is nullable, false otherwise
     public boolean v(ExpTree t) {
         String val = t.value;
         Operation op = t.op;

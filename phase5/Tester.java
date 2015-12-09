@@ -14,6 +14,10 @@ public class Tester {
     public static final int SIZE = 5;
     public static final String ALPHABET = "abc";
 
+    // Returns a randomly generated ExpTree with up to 'size' nodes 
+    // (calls w/ size=2 instead return a tree with only 1 node - otherwise, 
+    // there would be a disproportionate number of * nodes, as they would be 
+    // added when RNG picks * for a node AND when a call is made with size=2
     public ExpTree randomRE(int size) {
         RandStrGen randString = new RandStrGen(ALPHABET);
         Random rand = new Random();
@@ -56,6 +60,10 @@ public class Tester {
         return tree;
     }
 
+    // Given an ArrayList<String>, adds a number of randomly generated strings
+    // to that ArrayList
+    // BEFORE CALLING ME: Set global variable 'BASE'
+    //                    Set global variable 'MAX_POWER'
     public static void assign(ArrayList<String> randStrings) {
         int sum = 0;
         for (int i = 0; i < MAX_POWER; i++) {
@@ -66,6 +74,7 @@ public class Tester {
         }
     }
 
+    // Returns a randomly generated string using 'aux' as a seed
     public static String generate(int aux) {
         if (aux < BASE + 1) {
             return Character.toString((char) (aux + 96));
@@ -99,7 +108,7 @@ public class Tester {
 
     }
     
-    // Returns true if the given ExpTree has any star heights > 1 (    eg. ((a*)*)   ) 
+    // Returns true if the given ExpTree has at least one * node with * as its child(    eg. (a*)*   ) 
     public static boolean hasStarStack(ExpTree t) {
         
         if (t.op==null) { // Leaf node
@@ -134,15 +143,19 @@ public class Tester {
         return found;
     }
     
-    
-    public boolean testCompleteness() {
-        int numToGen = 50;
-        int strLen = 10;
+    // Returns false as soon as a randomly generated string is accepted by
+    // either the DFA or the Java Regex and is not accepted by the other. If 
+    // no strings do so, returns true
+    public boolean testCompleteness(int numTrials, int lenOfStrs) {
+        int numToGen = numTrials;
+        int strLen = lenOfStrs;
         String[] randStrs;
         RandStrGen randString = new RandStrGen(ALPHABET);
         randStrs = randString.genStrings(numToGen, strLen);
         System.out.println("Finished generating random strings.");
         
+	// ###################################### TESTING FOR STAR STACKS #####################################################
+	/*
         Derivative d = new Derivative();
         ExpTree[] trees = new ExpTree[50]; // Empty array to hold 50 ExpTrees
         
@@ -152,9 +165,9 @@ public class Tester {
         ArrayList<String> found = findStarStacks(trees);  // The final array containing the simplified ExpTrees that had star stacks
         for ( String item: found ) {
             System.out.println( item );
-        }
-        
-        /*
+	    } */
+	// ########################################################################################################################### 
+       
         for ( int i=0; i<numToGen; i++ ) {
             ExpTree tree = randomRE(strLen);
             Derivative d = new Derivative();
@@ -171,7 +184,7 @@ public class Tester {
             } else if ( !m.matches() && matcher.isMatch(randStrs[i]) ) {
                 return false;
             }
-        }*/
+        }
             
         return true;
         
@@ -179,7 +192,6 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
-        /*
         System.out.println("Generating tree with alphabet \"" + ALPHABET + "\" of size " + SIZE + "...");
         ExpTree randTree = t.randomRE(SIZE);
         System.out.println(t.printRE(randTree));
@@ -216,7 +228,8 @@ public class Tester {
         System.out.println("Number of states (Q):                            " + ourdfa.states.size);
         System.out.println("Number of transitions (Q x |Sigma|):             " + ourdfa.transitions.size);
         System.out.println("Steps to create DFA (Q^2 x |Sigma| x 2^(size)): " + (int)(Math.pow(ourdfa.states.size, 2) * ourdfa.transitions.size * Math.pow(2, SIZE)));
-    */
-        System.out.println(t.testCompleteness());
+    
+	// Uncomment me for completeness testing
+        // System.out.println(t.testCompleteness(50,10)); */
     }
 }

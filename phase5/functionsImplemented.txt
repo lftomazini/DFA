@@ -10,8 +10,8 @@ Derivative.java:
 
 	Derivative(char a, ExpTree tree): constructor
 	getDerivative(char c, ExpTree tree): computes deriv. given char and RE
-	v2(ExpTree t): nullification
-	v(ExpTree t): nullification
+	v2(ExpTree t): returns & (epsilon) if v(t), else returns @(null set) 
+	v(ExpTree t): returns bool result of "is t nullable?"
 
 DFA.java:
 	DFA.java represents a DFA, it contains a State object to hold its states, an
@@ -41,7 +41,10 @@ ExpTree.java:
 
 	ExpTree(String s): constructor
 	ExpTree(Operation o): constructor
+	convert(ExpTree t): returns the String equivalent of the regexp represented by this tree
 	isEqual(ExpTree otherTree): tree equality check
+	print(): returns string representation of the tree (for debugging)
+	  OP(arg1, OP(OP(arg2, arg3), arg4))
 
 RandStrGen.java:
 	RandStrGen.java is used to obtain random strings for us to test our RE matcher
@@ -52,10 +55,29 @@ RandStrGen.java:
 
 REMatcher.java:
 	REMatcher.java is used to match a string to a DFA that is already created
-
 	REMatcher(ExpTree regExp): constructor
 	isMatch(String s): matches the str against the RE => in lang or not
 
 Tester.java:
-	Tester.java just contains a main method, and it is used to test the soundness,
-	completeness, and space time efficency of our DFA implementation
+	randomRE(int size): randomly generates an ExpTree with up to 'size'
+		     nodes (sometimes fewer b/c calls w/ size=2 instead return 
+		     a subtree with only 1 node, else there would be a
+		     disproportionate num. of * operators in the tree)
+        assign(ArrayList<String> randStrings): adds a number (depending on global 
+				 vars 'BASE' and 'MAX_POWER') of random strings 
+				 (created by the next function, generate) to the 
+				 given ArrayList
+	generate(int aux): returns a randomly generated string using 'aux' as a seed
+	hasStarStack(ExpTree t): returns true if the tree has any * node with 
+			     another * as its child, otherwise returns false
+        findStarStacks(ExpTree[] trees): runs hasStarStack on the given list of
+				 ExpTrees and returns a list of ExpTrees with at
+				 least one star stack
+        testCompleteness(int numTrials, int lenOfStrs): Runs 'numTrials' tests 
+			     comparing the results of Java Regex's output
+    			     to the output of the DFA RE on randomly generated 
+			     strings. Returns false as soon as it finds a string on 
+			     which the two behave differently, otherwise, at the 
+			     end of trials, returns true 
+	Also contains a "main" method, used to test the soundness,
+	completeness, and space/time efficency of our DFA implementation

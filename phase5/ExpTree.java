@@ -6,13 +6,15 @@ public class ExpTree {
     public String value;
     public Operation op;
 
+    // Leaf node constructor
     public ExpTree(String s) {
         this.value = s;
         this.op = null;
         this.left = null;
         this.right = null;
     }
-
+    
+    // Op node constructor
     public ExpTree(Operation o) {
         this.value = null;
         this.op = o;
@@ -20,6 +22,74 @@ public class ExpTree {
         this.right = null;
     }
 
+    // Returns the String RE equivalent to the regexp represented by t
+    public String convert(ExpTree t) {
+        
+        // Base case: leaf node, return value
+        if (t.op==null) {
+            return (String)t.value;
+        }
+        // Rec. case: op node
+        else {
+            String cur_op = "";
+            boolean leftParens = false; 
+            boolean rightParens = false;
+            
+            // Current node's op is...
+            if (t.op==Operation.STAR) {
+                if (t.right.op==null && t.right.value.length()==1) { // leaf node w/ value only one char
+                    return this.convert(t.right) + "*";
+                } else {
+                    return "(" + this.convert(t.right) + ")*"; 
+                }
+            } else if (t.op==Operation.UNION) {
+                cur_op = "|";
+            } else if (t.op==Operation.INTERSECT) {
+                cur_op = "&&";
+            }
+            
+            if (t.left.op!=null) {
+                // Left child's op is...
+                switch(t.left.op) {
+                    case UNION:
+                        leftParens = true;
+                        break;
+                    case INTERSECT:
+                        leftParens = true;
+                        break;
+                }
+            }
+            
+            if (t.right.op!=null) {
+                // Right child's op is...
+                switch(t.right.op) {
+                    case UNION:
+                        rightParens = true;
+                        break;
+                    case INTERSECT:
+                        rightParens = true;
+                        break;
+                }
+            }
+            
+            String text;
+            if (leftParens) {
+                text = "(" + this.convert(t.left) + ")";
+            } else {
+                text = this.convert(t.left);
+            }
+            text += cur_op;
+            if (rightParens) {
+                text += "(" + this.convert(t.right) + ")";
+            } else {
+                text += this.convert(t.right);
+            }
+            
+            return text;
+        }     
+    }
+    
+    // Equality checker for trees -- returns true if equal, false if not
     public boolean isEqual(ExpTree otherTree) {
 //        if(this.right == null && otherTree.right != null) return false;
 //        if(this.left == null && otherTree.left != null) return false;
@@ -62,6 +132,7 @@ public class ExpTree {
 //        } else return false;
     }
     
+    // Returns a String representation of the tree in the form: OPERATION(left_child, right_child)
     public String print() {
         String ans = "";
         if(this.value != null) {
