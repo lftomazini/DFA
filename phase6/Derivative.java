@@ -145,7 +145,7 @@ public class Derivative {
                 return new ExpTree("&");
             } // @* = &
             else if (right.value != null && right.value.equals("@")) {
-                return new ExpTree("@");
+                return new ExpTree("&");
             } // Simplified
             else {
                 return t;
