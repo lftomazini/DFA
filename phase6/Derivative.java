@@ -148,7 +148,7 @@ public class Derivative {
                 return new ExpTree("&");
             } // Simplified
             else {
-                return t;
+                return right;
             }
         }
 
